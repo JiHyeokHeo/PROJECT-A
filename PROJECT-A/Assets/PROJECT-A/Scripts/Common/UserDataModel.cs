@@ -41,13 +41,13 @@ namespace TST
         [field: SerializeField] public UserItemDTO UserItemData { get; private set; } = new UserItemDTO();
         //[field: SerializeField] public PlayerEquipmentDTO PlayerEquipmentData { get; private set; } = new PlayerEquipmentDTO();
 
-        public event System.Action<UserItemDTO.UserItemData> OnUserItemChangedEvent;
+        //public event System.Action<UserItemDTO.UserItemData> OnUserItemChangedEvent;
         //public event System.Action<ItemEquipmentCategory, int, int> OnPlayerEquipmentChanagedEvent; // BeforeSlotId, AfterSlotId
 
         public void Initialize()
         {
-            //IngamePlayerData = LoadData<IngamePlayerDataDTO>().MakeDict();
-            //ingameMonsterData = LoadData<IngameMonsterDataDTO>().MakeDict();
+            IngamePlayerData = LoadData<IngamePlayerDataDTO>().MakeDict();
+            ingameMonsterData = LoadData<IngameMonsterDataDTO>().MakeDict();
         }
 
         public void ChangeData<T>(int id, T data) where T : RootDataDTO

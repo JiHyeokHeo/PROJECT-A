@@ -1,0 +1,23 @@
+{
+  "Values": [
+    {
+      "DataId": 100000,
+      "Name": "Tory",
+      "Hp": 100,
+      "AttackPower": 1,
+      "Speed": 5,
+      "Skill": [
+        "200000",
+        "200001",
+        "200002"
+      ],
+      "Position": "(5.0, 0.0, 0.0)",
+      "Rotation": "(0.0, 0.0, 0.0, 0.0)",
+      "Equipment": [
+        "M4A1",
+        "Grenade",
+        "Knife"
+      ]
+    }
+  ]
+}

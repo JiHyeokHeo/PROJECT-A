@@ -17,10 +17,12 @@ namespace Tory.Editor
     public class CsvToJson : EditorWindow
     {
         // Add a menu item named "Do Something" to MyMenu in the menu bar.
-        [MenuItem("TOOLS/CsvToJson %#K")]
+        [MenuItem("Tools/CsvToJson %#K")]
         public static void CsvDataConvertToJson()
         {
             // TODO : CSV 파일 추가 될때마다 추가
+
+            
             Read("IngamePlayerDataDTO");
         }
 
@@ -33,11 +35,19 @@ namespace Tory.Editor
         {
             // 추후 데이터 이걸로 변경
             //persistentDataPath
+            string checkDataPath = $"Assets/PROJECT-A/Anothers/Editor Saved Data/Json/{fileName}.json";
+            TextAsset data = (TextAsset)AssetDatabase.LoadAssetAtPath(checkDataPath, typeof(TextAsset));
+            if (data != null)
+            {
+                Debug.LogWarning("파일이 존재합니다");
+                return null;
+            }
+
             var list = new List<Dictionary<string, object>>();
 
-            string dataPath = $"Assets/PROJECT TST/Anothers/Editor Saved Data/Csv/{fileName}.csv";
+            string dataPath = $"Assets/PROJECT-A/Anothers/Editor Saved Data/Csv/{fileName}.csv";
 
-            TextAsset data = (TextAsset)AssetDatabase.LoadAssetAtPath(dataPath, typeof(TextAsset));
+            data = (TextAsset)AssetDatabase.LoadAssetAtPath(dataPath, typeof(TextAsset));
 
             if (data == null)
             {
@@ -95,8 +105,9 @@ namespace Tory.Editor
                 list.Add(entry);
             }
 
+
             string filePath = Application.dataPath;
-            string jsonOutputPath = $"/PROJECT TST/Anothers/Editor Saved Data/Json/{fileName}.json";
+            string jsonOutputPath = $"/PROJECT-A/Anothers/Editor Saved Data/Json/{fileName}.json";
             filePath += jsonOutputPath;
 
             var settings = new JsonSerializerSettings
