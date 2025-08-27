@@ -20,6 +20,7 @@ namespace TST
 
     public class Main : SingletonBase<Main>
     {
+        //이중 초기화 방지
         private bool isInitialized = false;
 
         private void Start()
