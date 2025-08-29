@@ -21,9 +21,13 @@ namespace Character
         [SerializeField]
         private LayerMask groundLayer;
 
+        [SerializeField]
+        private float spacing = 1.2f;
+
         private readonly List<ISelectable> selected = new();
         private Vector2 dragStartScreen;
         private bool dragging = false;
+        
 
         void Update()
         {
@@ -137,15 +141,30 @@ namespace Character
         // 공격 사거리 범위까지 들어가서 공격하는 것도 추가(롤처럼)
         void IssueMove()
         {
-            if (selected.Count == 0) return;
-
+            var chars = selected.OfType<ICharacter>().ToList();
+            if (chars.Count == 0)
+                return;
             Vector2 wp = worldCam.ScreenToWorldPoint(Input.mousePosition);
-            var hit = Physics2D.Raycast(wp, Vector2.zero, 0f, groundLayer);
-            Vector2 target = hit.collider ? hit.point : wp;
 
-            foreach (var sel in selected.OfType<ICharacter>())
+            var groundHit = Physics2D.OverlapPoint(wp, groundLayer);
+            Vector2 origin = groundHit ? (Vector2)groundHit.transform.position : wp;
+
+            var ordered = FormationUtility.StableOrder(chars);
+
+            var center = new Vector2(
+                ordered.Average(c => c.Transform.position.x),
+                ordered.Average(c => c.Transform.position.y));
+
+            var forward = (origin - center);
+            if (forward.sqrMagnitude < 0.0001f)
+                forward = Vector2.right;
+
+            
+            var slots = FormationUtility.BuildGridSlots(origin, forward.normalized, ordered.Count(), spacing);
+        
+            for (int i = 0; i < ordered.Count(); i++)
             {
-                sel.Movable.MoveTo(target);
+                ordered[i].Movable?.MoveTo(slots[i]);
             }
         }
 
