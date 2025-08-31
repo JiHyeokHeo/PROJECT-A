@@ -15,7 +15,7 @@ namespace TST
         public static Action<KeyCode> onCast;
         private void Start()
         {
-            SetCursorVisible(false);
+            SetCursorVisible(true);
         }
 
         private static void SetCursorVisible(bool isVisible)

@@ -7,7 +7,7 @@ namespace A
 {
     public interface IStateMachine
     {
-        CharacterState state { get; }
+        CharacterState State { get; }
         void ChangeState(CharacterState state);
         event Action<CharacterState> OnStateChanged;
     }
