@@ -1,7 +1,6 @@
 using UnityEngine;
 using Unity.Burst;
 using Unity.Jobs;
-using UnityEngine;
 using Unity.Collections;
 
 // Job System과 함꼐 사용되여 C# 코드를 고성능 네이티브 코드로 컴파일 하여 실행 속도 극대화
@@ -32,9 +31,12 @@ namespace A
                 b = 10,
                 result = result
             };
-
-            JobHandle handle = job.Schedule();
-            handle.Complete();
+            
+            for (int i = 0; i < 1000; i ++)
+            {
+                JobHandle handle = job.Schedule();
+                handle.Complete();
+            }
 
             Debug.Log("Result : " + result[0]);
 

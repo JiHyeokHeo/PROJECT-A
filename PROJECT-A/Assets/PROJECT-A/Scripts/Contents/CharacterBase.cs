@@ -51,7 +51,7 @@ namespace A
         private bool isDragging = false;
         private Vector2 dragStartScreen;
         private Vector2 targetRightClickScreen;
-        private bool isClicked = false;
+        //private bool isClicked = false;
         public float moveSpeed = 30f;
         public Rigidbody2D rb2d;
         public bool isMoveing = false;
