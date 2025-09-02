@@ -15,8 +15,8 @@ namespace A
 
         [Header("Spawn Settings")]
         [SerializeField, Min(0f)] private float spawnIntervalSeconds = 1f;
-        [SerializeField] private Vector2 xRange = new Vector2(-300, 300);
-        [SerializeField] private Vector2 yRange = new Vector2(-300, 300);
+        [SerializeField] private Vector2 xRange = new Vector2(-50, 50);
+        [SerializeField] private Vector2 yRange = new Vector2(-50, 50);
         [SerializeField] private bool autoStart = true;
 
         private CancellationTokenSource cancellationTokenSource;
@@ -26,6 +26,9 @@ namespace A
             if (instance == null)
                 instance = this;
 
+            xRange = new Vector2(-50, 50);
+            yRange = new Vector2(-50, 50);
+
             if (autoStart)
             {
                 StartSpawning();
@@ -34,22 +37,32 @@ namespace A
 
         void Start()
         {
-            
+           
         }
 
+        float deltaTime;
         private void Update()
         {
+            deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
             if (Input.GetKeyDown(KeyCode.V))
             {
                 cancellationTokenSource.Cancel();
             }
         }
 
+        private void FixedUpdate()
+        {
+        
+        }
+
         private async UniTask Spawn(float seconds, CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
-                Instantiate(spawnObject, GetRandomPosition(), Quaternion.identity);
+                for (int i = 0; i < 2000; i ++)
+                {
+                    Instantiate(spawnObject, GetRandomPosition(), Quaternion.identity);
+                }
 
                 try
                 {
@@ -71,7 +84,13 @@ namespace A
             cancellationTokenSource = new CancellationTokenSource();
 
             float interval = intervalOverride ?? spawnIntervalSeconds;
-            Spawn(interval, cancellationTokenSource.Token).Forget();
+
+            for (int i =0; i < 5; i ++)
+            {
+                Spawn(interval, cancellationTokenSource.Token).Forget();
+
+            }
+        
         }
 
         public void StopSpawning()

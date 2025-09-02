@@ -41,19 +41,19 @@ namespace A
         float moveSpeed = 10f;
         private void LateUpdate()
         {
-            Vector3 move = Vector3.zero;
-            if (Input.mousePosition.x <= edgeSize) move.x -= 1;
-            if (Input.mousePosition.x >= Screen.width - edgeSize) move.x += 1;
-            if (Input.mousePosition.y <= edgeSize) move.y -= 1;
-            if (Input.mousePosition.y >= Screen.height - edgeSize) move.y += 1;
+            //Vector3 move = Vector3.zero;
+            //if (Input.mousePosition.x <= edgeSize) move.x -= 1;
+            //if (Input.mousePosition.x >= Screen.width - edgeSize) move.x += 1;
+            //if (Input.mousePosition.y <= edgeSize) move.y -= 1;
+            //if (Input.mousePosition.y >= Screen.height - edgeSize) move.y += 1;
 
-            if (Input.GetKeyDown(KeyCode.Space) && current.Count > 0)
-            {
-                Vector3 newPos = new Vector3(current[0].CurrentPos.x , current[0].CurrentPos.y, -10);
-                Camera.main.transform.position = newPos;
-            }
+            //if (Input.GetKeyDown(KeyCode.Space) && current.Count > 0)
+            //{
+            //    Vector3 newPos = new Vector3(current[0].CurrentPos.x , current[0].CurrentPos.y, -10);
+            //    Camera.main.transform.position = newPos;
+            //}
 
-            Camera.main.transform.position += move * moveSpeed * Time.deltaTime;
+            //Camera.main.transform.position += move * moveSpeed * Time.deltaTime;
         }
 
         [SerializeField] private int size = 7;
@@ -61,21 +61,21 @@ namespace A
 
         private void OnGUI()
         {
-            GUIStyle style = new GUIStyle();
+            //GUIStyle style = new GUIStyle();
 
-            Rect rect = new Rect(10, 10, Screen.width, Screen.height);
-            Rect rect2 = new Rect(10, 40, Screen.width, Screen.height);
-            style.alignment = TextAnchor.UpperLeft;
-            style.fontSize = size;
-            style.normal.textColor = color;
+            //Rect rect = new Rect(10, 10, Screen.width, Screen.height);
+            //Rect rect2 = new Rect(10, 40, Screen.width, Screen.height);
+            //style.alignment = TextAnchor.UpperLeft;
+            //style.fontSize = size;
+            //style.normal.textColor = color;
 
-            float ms = deltaTime * 1000f;
-            float fps = 1.0f / deltaTime;
-            string text = string.Format("{0:0.} FPS ({1:0.0} ms)", fps, ms);
-            string text2 = string.Format("Selected Count ({0:0.0} °³)", current.Count);
+            //float ms = deltaTime * 1000f;
+            //float fps = 1.0f / deltaTime;
+            //string text = string.Format("{0:0.} FPS ({1:0.0} ms)", fps, ms);
+            //string text2 = string.Format("Selected Count ({0:0.0} °³)", current.Count);
 
-            GUI.Label(rect, text, style);
-            GUI.Label(rect2, text2, style);
+            //GUI.Label(rect, text, style);
+            //GUI.Label(rect2, text2, style);
         }
     }
 }
