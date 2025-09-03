@@ -11,11 +11,11 @@ namespace A
         public Transform Owner;
         public Rigidbody2D RigidBody2D;
         public SpineAnimationDriver AnimationDriver;
-        //public EventHandler EventHandler; // 몬스터 이벤트 처리 피격 등
-        public MonsterConfig MonsterConfig;
+        //public EventHandler EventHandler; // 실시간 체력 처리를 여기서 할까..........???????????????????
+        public MonsterConfigSO MonsterConfig;
         public Transform Target; // 플레이어
 
-        public CancellationTokenSource CancellationTokenSource = new CancellationTokenSource(); // 패턴 취소
+        public CancellationTokenSource CancellationToken = new CancellationTokenSource(); // 패턴 취소
 
         public float SqrAttackRange => MonsterConfig.AttackRange * MonsterConfig.AttackRange;
         public float SqrChaseStopRange => MonsterConfig.ChaseStopRange * MonsterConfig.ChaseStopRange;

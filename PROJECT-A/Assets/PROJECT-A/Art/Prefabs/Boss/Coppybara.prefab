@@ -12,11 +12,12 @@ GameObject:
   - component: {fileID: 260038003172640519}
   - component: {fileID: 802915401522675677}
   - component: {fileID: 2932272508667981544}
-  - component: {fileID: 1639237204736227996}
   - component: {fileID: 8903626333653161568}
   - component: {fileID: 278509727644152791}
   - component: {fileID: 6707117836464169782}
   - component: {fileID: 373750400776153531}
+  - component: {fileID: 3597760240590315665}
+  - component: {fileID: 2014404178891370815}
   m_Layer: 0
   m_Name: Coppybara
   m_TagString: Untagged
@@ -101,21 +102,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade756c96a90f7a43841153ab67ad052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1639237204736227996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3139309546424423041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2994246a11a2b0b4ab0956108fa1391a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monsterConfig: {fileID: 11400000, guid: a021dff083085ba42ac59ce02d5b9cf0, type: 2}
-  animationSetSO: {fileID: 11400000, guid: fd303df791f145142ae6e285c0b67978, type: 2}
-  animationDriver: {fileID: 0}
+  monsterBase: {fileID: 0}
+  currentState:
+    rid: -2
+  aiStates:
+  - rid: -2
+  - rid: 8663004912308715520
+  - rid: -2
+  - rid: -2
+  - rid: 8663004912308715521
+  - rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 8663004912308715520
+      type: {class: IdleState, ns: A, asm: Assembly-CSharp}
+      data: 
+    - rid: 8663004912308715521
+      type: {class: AttackState, ns: A, asm: Assembly-CSharp}
+      data: 
 --- !u!114 &8903626333653161568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,3 +210,47 @@ MonoBehaviour:
   _animationName: 
   loop: 1
   timeScale: 1
+--- !u!114 &3597760240590315665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3139309546424423041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2994246a11a2b0b4ab0956108fa1391a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monsterConfig: {fileID: 11400000, guid: a021dff083085ba42ac59ce02d5b9cf0, type: 2}
+  animationSetSO: {fileID: 11400000, guid: fd303df791f145142ae6e285c0b67978, type: 2}
+  animationDriver: {fileID: 0}
+  target: {fileID: 0}
+  hp: 0
+--- !u!50 &2014404178891370815
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3139309546424423041}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

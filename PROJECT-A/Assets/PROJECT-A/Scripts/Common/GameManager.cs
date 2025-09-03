@@ -54,7 +54,7 @@ namespace TST
         }
 
         [Button()]
-        public void ChangeMonsterState(AI_Controller monsterController, AIStateId stateType)
+        public void ChangeMonsterState(AI_Controller monsterController, EAIStateId stateType)
         {
             monsterController.AIStateChange(stateType);
         }

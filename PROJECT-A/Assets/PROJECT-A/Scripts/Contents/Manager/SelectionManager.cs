@@ -56,7 +56,7 @@ namespace A
             //Camera.main.transform.position += move * moveSpeed * Time.deltaTime;
         }
 
-        [SerializeField] private int size = 7;
+        //[SerializeField] private int size = 7;
         [SerializeField] private Color color = Color.red;
 
         private void OnGUI()

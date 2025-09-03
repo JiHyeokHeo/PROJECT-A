@@ -5,9 +5,14 @@ using UnityEngine;
 
 namespace A
 {
-    public class IdleState : IAIState
+    public class IdleState : AIState
     {
-        public override AIStateId aiStateId => AIStateId.Idle;
+        public IdleState(MonsterBase monster) : base(monster)
+        {
+            this.monster = monster;
+        }
+
+        public override EAIStateId aiStateId => EAIStateId.Idle;
 
         public override void Enter()
         {
@@ -20,6 +25,10 @@ namespace A
 
         public override void Tick(float dt)
         {
+            // 특정 구간에 들어가면 State 변경
+            
+
+
         }
     }
 }
