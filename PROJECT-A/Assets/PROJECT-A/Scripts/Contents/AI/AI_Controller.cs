@@ -17,6 +17,11 @@ namespace A
             currentState = aiStates[idleIndex];
         }
 
+        private void Start()
+        {
+            CustomEvent.Trigger(gameObject, "GoTo", this);
+        }
+
         public void GoTo(AIStateId target)
         {
             CustomEvent.Trigger(gameObject, "GoTo", target);

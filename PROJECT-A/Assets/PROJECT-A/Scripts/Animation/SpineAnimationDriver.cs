@@ -11,13 +11,13 @@ namespace A
         SkeletonAnimation skeleton;
         Spine.AnimationState state;
 
-        void Awake()
+        private void Awake()
         {
             skeleton = GetComponent<SkeletonAnimation>();
             state = skeleton.AnimationState;
             state.Event += OnSpineEvent;
         }
-         
+
         public void PlayLoop(AnimationReferenceAsset clip, float mix = 0.1f)
         {
             if (clip == null)
