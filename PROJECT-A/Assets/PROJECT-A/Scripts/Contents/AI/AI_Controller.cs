@@ -1,6 +1,3 @@
-using Cysharp.Threading.Tasks.Triggers;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,22 +5,41 @@ namespace A
 {
     public class AI_Controller : MonoBehaviour
     {
-        public IAIState Current { get; private set; }
+        public IAIState CurrentState { get { return currentState; } private set { } }
+        public AIStateId CurrentId => CurrentState != null ? CurrentState.aiStateId : AIStateId.None;
 
-        
-        public void AIStateChange(IAIState next)
+        [SerializeReference] private IAIState currentState;
+        [SerializeReference] public IAIState[] aiStates = new IAIState[6];
+
+        private void Awake()
         {
-            if (next == null || Current == next)
+            int idleIndex = (int)AIStateId.Idle;
+            currentState = aiStates[idleIndex];
+        }
+
+        public void GoTo(AIStateId target)
+        {
+            CustomEvent.Trigger(gameObject, "GoTo", target);
+        }
+
+        public void AIStateChange(AIStateId next)
+        {
+            if (next == AIStateId.None || CurrentId == next)
                 return;
-            Current.Exit(); // 씬 나간 후
-            Current = next;
-            //stateChangeEvent?.Invoke(); // 혹시라도 시작하자마자 이벤트가 필요하다면 실행
-            Current.Enter();
+            currentState.Exit(); // 씬 나간 후
+            currentState = aiStates[(int)next];
+            GoTo(currentState.aiStateId); // Visual Scripting Trigger Event Send
+            currentState.Enter();
         }
 
         void Update()
         {
-            Current?.Tick(Time.deltaTime);
+            currentState?.Tick(Time.deltaTime);
+
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                AIStateChange(AIStateId.Attack);
+            }
         }
     }
 }

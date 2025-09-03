@@ -5,11 +5,15 @@ using UnityEngine;
 
 namespace A
 {
-    public interface IAIState 
+    public enum AIStateId { None, Idle, Patrol, Chase, Attack, Groggy }
+
+    [Serializable]
+    public abstract class IAIState 
     {
-        public void Enter();
-        public void Tick(float dt);
-        public void Exit();
+        public abstract AIStateId aiStateId { get; }
+        public abstract void Enter();
+        public abstract void Tick(float dt);
+        public abstract void Exit();
     }
 
     public interface IDamage

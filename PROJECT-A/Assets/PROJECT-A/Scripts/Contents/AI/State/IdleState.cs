@@ -5,21 +5,21 @@ using UnityEngine;
 
 namespace A
 {
-    public class IdleState : MonoBehaviour,IAIState
+    public class IdleState : IAIState
     {
-        public void Enter()
+        public override AIStateId aiStateId => AIStateId.Idle;
+
+        public override void Enter()
         {
             
         }
 
-        public void Exit()
+        public override void Exit()
         {
-            
         }
 
-        public void Tick(float dt)
+        public override void Tick(float dt)
         {
-            
         }
     }
 }
