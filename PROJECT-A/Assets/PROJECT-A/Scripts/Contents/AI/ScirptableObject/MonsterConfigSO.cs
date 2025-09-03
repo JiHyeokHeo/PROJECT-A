@@ -9,16 +9,16 @@ namespace A
     public class MonsterConfigSO : ScriptableObject
     {
         [Header("기본 스탯")]
-        public float maxHp = 100f;
-        public float MoveSpeed = 3.0f;
-        public float damage = 1.0f;
+        public float MaxHp;
+        public float MoveSpeed;
+        public float Damage;
 
         [Header("시야/사거리")]
-        public float DetectRange = 12f;
-        public float AttackRange = 3.5f;
-        public float ChaseStopRange = 1.5f;
+        public float DetectRange;
+        public float AttackRange;
+        public float ChaseStopRange;
 
         // 몬스터 패턴
-        public PatternSetSO patternSetSO;
+        public PatternSetSO PatternSO;
     }
 }

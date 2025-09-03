@@ -31,7 +31,7 @@ namespace A
         public event Action<float, Vector2> OnDamagedEvent;
         public event Action OnDeadEvent;
 
-
+        float facingSing = 1; // ¿ÞÂÊ 1 ¿À¸¥ÂÊ -1
         #endregion
         AI_Controller aI_Controller;
         public PatternScheduler patternScheduler;
@@ -45,17 +45,23 @@ namespace A
         {
             aI_Controller = GetComponent<AI_Controller>();
             monsterContext = new MonsterContext();
-            monsterContext.Owner = transform;
+            monsterContext.Owner = this;
             monsterContext.RigidBody2D = GetComponent<Rigidbody2D>();
             animationDriver = GetComponent<SpineAnimationDriver>();
             animationDriver.animSetSO = animationSetSO;
             monsterContext.AnimationDriver = GetComponent<SpineAnimationDriver>();
             monsterContext.AnimationDriver.animSetSO = animationSetSO;
             monsterContext.MonsterConfig = monsterConfig;
-            monsterContext.Target = target.transform;
+            monsterContext.Target = target.GetComponent<Rigidbody2D>();
 
             patternScheduler = new PatternScheduler();
             patternScheduler.SetUp(monsterContext);
+        }
+
+
+        void FixedUpdate()
+        {
+            
         }
 
         void OnTriggerEnter2D(Collider2D other)
@@ -65,6 +71,22 @@ namespace A
             //    damageInterface.ApplyDamage(monsterConfig.damage);
             //}
         }
+
+        public void Move(Vector2 dir, float speed)
+        {
+            Vector2 nextPosition = monsterContext.RigidBody2D.position + dir.normalized * speed * Time.fixedDeltaTime;
+            monsterContext.RigidBody2D.MovePosition(nextPosition);
+
+            int sign = dir.x <= 0 ? 1 : -1;
+            if (sign != facingSing)
+            {
+                facingSing = sign;
+                Vector3 s = transform.localScale;
+                s.x *= -1;
+                transform.localScale = s;
+            }
+        }
+
 
         void OnDamaged(float dmg, Vector2 hitDir)
         {

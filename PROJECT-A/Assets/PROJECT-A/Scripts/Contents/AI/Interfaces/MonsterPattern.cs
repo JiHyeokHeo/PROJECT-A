@@ -16,6 +16,15 @@ namespace A
 
         public abstract void OnSetup(MonsterContext monsterContext);
 
+        public float NextAvailableTime { get; protected set; }
+
+        public void ResetCooldown(float now)
+        {
+            NextAvailableTime = now + Cooldown;
+        }
+
+        public bool IsReady(float now) => now >= NextAvailableTime;
+
         public abstract UniTask Execute(CancellationToken ct);
     }
 }

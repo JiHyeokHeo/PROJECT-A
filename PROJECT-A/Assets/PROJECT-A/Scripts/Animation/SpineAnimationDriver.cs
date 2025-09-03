@@ -46,6 +46,15 @@ namespace A
             return te;
         }
 
+        public TrackEntry QueueOnceLoop(AnimationReferenceAsset clip, float delay = 0f)
+        {
+            if (clip == null)
+                return null;
+
+            var te = state.AddAnimation(0, clip, true, delay);
+            return te;
+        }
+
         public void Clear(float mixOut)
         {
             state.SetEmptyAnimation(0, mixOut);

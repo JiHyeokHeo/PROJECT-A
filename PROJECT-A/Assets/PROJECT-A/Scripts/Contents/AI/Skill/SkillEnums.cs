@@ -9,6 +9,7 @@ namespace A
         None,
         Rush,
         RushReady,
+        RushDone,
         MeleeAttack,
     }
 
