@@ -1,11 +1,7 @@
 using Cysharp.Threading.Tasks;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace A
@@ -62,9 +58,6 @@ namespace A
 
             await pick.Pattern.Execute(ct);
             pick.Pattern.ResetCooldown(Time.time);
-            //var cd = Mathf.Max(0f, pick.Pattern.Cooldown);
-            //if (cd > 0f)
-            //    await UniTask.Delay(TimeSpan.FromSeconds(cd), cancellationToken : ct);
         }
 
         WeightedPattern Pick()
