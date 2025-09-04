@@ -9,5 +9,8 @@ namespace A
     {
         public float Speed => 5f;
         public float HP => 100f;
+        public float Atk => 10f;
+        public float AtkSpeed => 1.0f;
+        public float MaxHP => 100f;
     }
 }

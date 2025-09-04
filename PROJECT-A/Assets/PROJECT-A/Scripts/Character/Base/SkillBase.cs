@@ -6,6 +6,7 @@ public abstract class SkillBase : ScriptableObject, ISkill
     public abstract KeyCode HotKey { get; }
     public abstract SkillTargetType Type { get; }
     public abstract float CoolDown { get; }
+    public abstract float Range { get; }
 
     private float lastCastTime = -999f;
     public virtual bool CanCast(ICharacter caster)

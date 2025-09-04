@@ -44,6 +44,13 @@ public class Moveable : MonoBehaviour, IMovable
     public bool CanMove => true;
 
     
+    public void Stop()
+    {
+        hasPath = false;
+        waypoints.Clear();
+        rb.velocity = Vector2.zero;
+        finalGoal = rb.position;
+    }
     public void MoveTo(Vector2 worldPos)
     {
         // 같은 지점 연타 방지

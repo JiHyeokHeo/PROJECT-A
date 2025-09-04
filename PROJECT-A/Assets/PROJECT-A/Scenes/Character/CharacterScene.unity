@@ -215,13 +215,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   worldCam: {fileID: 1402619883}
   selectionBox: {fileID: 1083079944}
+  selectionBoxCanvas: {fileID: 420098504}
   characterLayer:
     serializedVersion: 2
     m_Bits: 64
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
-  _rectTransform: {fileID: 420098504}
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  ClickThresholdSqr: 16
   spacing: 1.2
 --- !u!1 &409414002
 GameObject:

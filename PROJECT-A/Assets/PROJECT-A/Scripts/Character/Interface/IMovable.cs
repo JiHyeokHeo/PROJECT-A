@@ -6,5 +6,6 @@ namespace Character
     {
         bool CanMove { get; }
         void MoveTo(Vector2 worldPos);
+        void Stop();
     }
 }

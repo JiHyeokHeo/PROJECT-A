@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 2440059344978870833}
   - component: {fileID: 1199210259133337495}
   - component: {fileID: 1986284294273781603}
+  - component: {fileID: 1215140365581982422}
   - component: {fileID: 6119479541951085953}
   m_Layer: 6
   m_Name: Charcter
@@ -302,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6267f252520e364881e74d1945cb751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillQ: {fileID: 11400000, guid: 9c5d861c0ca813948b5e74861a07dd6d, type: 2}
+  skillQ: {fileID: 0}
   skillW: {fileID: 0}
   skillE: {fileID: 0}
   skillR: {fileID: 0}
@@ -329,6 +330,25 @@ MonoBehaviour:
     m_Bits: 0
   usePathfinder: 1
   separationPauseOnNewOrder: 0.08
+--- !u!114 &1215140365581982422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8847907703829724732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb86488ce5890364fa039c26389bd2dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  attackRange: 1.5
+  attackWindup: 0.12
+  attackCooldown: 0.8
+  baseDamage: 15
 --- !u!114 &6119479541951085953
 MonoBehaviour:
   m_ObjectHideFlags: 0

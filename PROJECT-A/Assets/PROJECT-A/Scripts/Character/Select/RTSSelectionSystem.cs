@@ -14,31 +14,54 @@ namespace Character
         [Header("Refs")]
         [SerializeField]
         private Camera worldCam;
-        [SerializeField]
-        private RectTransform selectionBox;
-        [SerializeField]
-        private LayerMask characterLayer;
-        [SerializeField]
-        private LayerMask groundLayer;
-        [SerializeField]
-        private RectTransform _rectTransform;
 
         [SerializeField]
+        private RectTransform selectionBox;
+
+        [SerializeField]
+        private RectTransform selectionBoxCanvas;
+
+        [SerializeField]
+        private LayerMask characterLayer;
+
+        [SerializeField]
+        private LayerMask groundLayer;
+
+        [SerializeField]
+        private LayerMask enemyLayer;
+
+        // 클릭인지 드래그인지 판단하는 임계값
+        [SerializeField]
+        private float ClickThresholdSqr = 16f;
+
+        // 포메이션 슬롯 간격
+        [SerializeField]
         private float spacing = 1.2f;
+
+        //같은 프레임에 중복 이동 명령이 여러 번 나가는 것을 방지
         int _lastIssueFrame = -1;
+
+        //현재 선택된 유닛
         [SerializeField]
         private readonly List<ISelectable> selected = new();
 
+        //드래그 시작점(스크린 & UI)
         private Vector2 dragStartScreen;
         private Vector2 dragStartUIScreen;
+
+        // 현재 드래그 중인지
         private bool dragging = false;
         
+        //A 키 무브 상태
+        private bool attackMovePrimed = false;
+
 
         void Update()
         {
+            // UI 무시
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 return;
-           
+            Debug.Log(attackMovePrimed);
         }
 
         private void OnEnable()
@@ -46,22 +69,31 @@ namespace Character
             TST.InputSystem.onDrag += DragLogic;
             TST.InputSystem.onDragEnd += DragEndLogic;
             TST.InputSystem.onMove += IssueMove;
-            TST.InputSystem.onCast += TryCast;
+            TST.InputSystem.onAttackMovePrime += onAttackMovePrime;
         }
         private void OnDisable()
         {
             TST.InputSystem.onDrag -= DragLogic;
             TST.InputSystem.onDragEnd -= DragEndLogic;
             TST.InputSystem.onMove -= IssueMove;
-            TST.InputSystem.onCast -= TryCast;
+            TST.InputSystem.onAttackMovePrime -= onAttackMovePrime; 
         }
+        
+        // A 무브 토글
+        private void onAttackMovePrime()
+        {
+            attackMovePrimed = !attackMovePrimed;
+            
+        }
+      
+
         private void DragLogic()
         {
             if (dragging == false)
             {
                 dragging = true;
                 dragStartScreen = Input.mousePosition;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, Input.mousePosition, worldCam, out dragStartUIScreen);
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(selectionBoxCanvas, Input.mousePosition, worldCam, out dragStartUIScreen);
                 selectionBox.gameObject.SetActive(true);
             }
             UpdateDrag();
@@ -76,21 +108,10 @@ namespace Character
             }
         }
 
-        //void UpdateDrag()
-        //{
-        //    Vector2 cur;
-        //    RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, Input.mousePosition, worldCam, out dragStartScreen);
-        //    Vector2 min = Vector2.Min(dragStartScreen, cur);
-        //    Vector2 size = Vector2.Max(dragStartScreen, cur) - min;
-
-        //    selectionBox.anchoredPosition = min;
-        //    selectionBox.sizeDelta = size;
-        //}
-
         void UpdateDrag()
         {
             Vector2 cur;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, Input.mousePosition, worldCam, out cur);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(selectionBoxCanvas, Input.mousePosition, worldCam, out cur);
             Vector2 min = Vector2.Min(dragStartUIScreen, cur);
             Vector2 size = Vector2.Max(dragStartUIScreen, cur) - min;
 
@@ -100,7 +121,33 @@ namespace Character
 
         void EndDrag()
         {
-            if (((Vector2)Input.mousePosition - dragStartScreen).sqrMagnitude < 16f)
+            bool isClick = ((Vector2)Input.mousePosition - dragStartScreen).sqrMagnitude < ClickThresholdSqr;
+            
+            if (isClick && attackMovePrimed)
+            {
+                Vector2 wp = worldCam.ScreenToWorldPoint(Input.mousePosition);
+
+                var enemyHit = Physics2D.OverlapPoint(wp, enemyLayer);
+                if (enemyHit)
+                {
+                    var targetSel = enemyHit.GetComponent<ICharacter>();
+                    IssueCommandAttackMove(wp, targetSel);
+                    attackMovePrimed = false;
+                    return;
+                }
+
+                if (Physics2D.OverlapPoint(wp, groundLayer))
+                {
+                    IssueCommandAttackMove(wp, null);
+                    attackMovePrimed = false;
+                    return;
+                }
+
+                attackMovePrimed = false;
+                return;
+            }
+            
+            if (isClick)
             {
                 Vector2 wp = worldCam.ScreenToWorldPoint(Input.mousePosition);
                 var hit = Physics2D.OverlapPoint(wp, characterLayer);
@@ -155,6 +202,50 @@ namespace Character
             selected.Clear();
         }
 
+        void IssueCommandAttackMove(Vector2 worldPoint, ICharacter explicitTarget)
+        {
+            // 선택된 유닛 -> ICharacter 목록으로
+            var chars = selected
+                .Select(s => (s as Component)?.GetComponent<ICharacter>())
+                .Where(c => c != null)
+                .ToList();
+            if (chars.Count == 0) return;
+
+            // 포메이션 슬롯 계산
+            var ordered = FormationUtility.StableOrder(chars);
+            var center = new Vector2(
+                ordered.Average(c => c.Transform.position.x),
+                ordered.Average(c => c.Transform.position.y)
+            );
+            var forward = (worldPoint - center);
+            if (forward.sqrMagnitude < 0.0001f) forward = Vector2.right;
+
+            var slots = FormationUtility.BuildGridSlots(worldPoint, forward.normalized, ordered.Count, spacing);
+
+            // 유닛별 명령 내리기
+            for (int i = 0; i < ordered.Count; i++)
+            {
+                var unit = ordered[i];
+                //var go = ((Component)unit.Transform).gameObject;
+                //var combat = go.GetComponent<CharacterCombat>();
+
+                if (unit.CharacterCombat != null)
+                {
+                    // 명시 타깃 공격: 타깃이 사라지면 해당 슬롯 위치로 이동하게 폴백 포인트 전달
+                    if (explicitTarget != null)
+                    {
+                        unit.CharacterCombat.CancelAll();
+                        unit.CharacterCombat.IssueAttackTarget(explicitTarget, unit);
+                    }
+                    else
+                    {
+                        unit.CharacterCombat.CancelAll();
+                        unit.CharacterCombat.IssueAttackMove(worldPoint, unit);
+                    }
+                }
+            }
+        }
+
         //추후에 groundlayer 뿐만 아니라 몬스터(보스)가 있으면 
         // 공격 사거리 범위까지 들어가서 공격하는 것도 추가(롤처럼)
         void IssueMove()
@@ -189,6 +280,7 @@ namespace Character
             var slots = FormationUtility.BuildGridSlots(origin, forward.normalized, ordered.Count(), spacing);
             for (int i = 0; i < ordered.Count(); i++)
             {
+                ordered[i].CharacterCombat?.CancelAll();
                 ordered[i].Movable?.MoveTo(slots[i]);
             }
         }

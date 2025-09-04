@@ -2,6 +2,8 @@
 {
     Idle,
     Moving,
+    AttackMove,
+    Attack,
     SkillQCasting,
     SkillWCasting,
     SkillECasting,

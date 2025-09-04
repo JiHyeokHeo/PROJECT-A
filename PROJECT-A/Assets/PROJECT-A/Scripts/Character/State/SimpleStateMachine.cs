@@ -16,6 +16,7 @@ namespace A
         {
             if (_state == state)
                 return;
+            _state = state;
             OnStateChanged?.Invoke(state);
         }
     }

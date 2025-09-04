@@ -6,9 +6,9 @@ namespace Character
 {
     public interface IStats
     {
-        //float MaxHP { get; }
+        float MaxHP { get; }
         float HP { get; }
-        //float Atk { get; }
+        float Atk { get; }
         //float M_Atk { get; }
         //float Heal { get; }
         //float Def { get; }
@@ -24,7 +24,7 @@ namespace Character
         //float Eva { get; }
         //float CoolRed { get; }
         //float CastSpeed { get; }
-        //float AtkSpeed { get; }
+        float AtkSpeed { get; }
         //float Duration { get; }
         //float CritRate { get; }
         //float CritDamage { get; }

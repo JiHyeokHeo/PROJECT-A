@@ -13,5 +13,6 @@ namespace A
         public IMovable Movable { get; }
         public IStateMachine StateMachine { get;}
         public ISkillSet SkillSet { get; }
+        public CharacterCombat CharacterCombat { get; }
     }
 }

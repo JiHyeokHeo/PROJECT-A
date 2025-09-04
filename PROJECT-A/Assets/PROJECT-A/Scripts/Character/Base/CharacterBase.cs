@@ -14,6 +14,7 @@ namespace A
         public IMovable Movable { get; private set; }
         public IStateMachine StateMachine { get; private set; }
         public ISkillSet SkillSet { get; private set; }
+        public CharacterCombat CharacterCombat { get; private set; }
        
 
         void Awake()
@@ -23,7 +24,9 @@ namespace A
             Movable = GetComponent<IMovable>();
             StateMachine = GetComponent<IStateMachine>();
             SkillSet = GetComponent<ISkillSet>();
+            CharacterCombat = GetComponent<CharacterCombat>();
         }
+
         protected virtual void OnEnable()
         {
             if (Health != null)

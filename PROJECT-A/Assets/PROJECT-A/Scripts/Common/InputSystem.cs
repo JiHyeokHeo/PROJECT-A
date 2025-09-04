@@ -12,7 +12,10 @@ namespace TST
         public static Action onDrag;
         public static Action onDragEnd;
         public static Action onMove;
-        public static Action<KeyCode> onCast;
+        public static Action onAttackMovePrime;
+        public static Action<KeyCode> onCastStart;
+        public static Action<KeyCode> onCastEnd;
+
         private void Start()
         {
             SetCursorVisible(true);
@@ -36,32 +39,37 @@ namespace TST
         {
 
             if (Input.GetMouseButton(0))
-            {
                 onDrag?.Invoke();
-            }
-            
+
             if (Input.GetMouseButtonUp(0))
-            {
                 onDragEnd?.Invoke();
-            }
+
             if (Input.GetMouseButtonDown(1))
                 onMove?.Invoke();
+
             if (Input.GetKeyDown(KeyCode.Q))
-            {
-                onCast?.Invoke(KeyCode.Q);
-            }
+                onCastStart?.Invoke(KeyCode.Q);
+            if (Input.GetKeyUp(KeyCode.Q))
+                onCastEnd?.Invoke(KeyCode.Q);
+            
             if (Input.GetKeyDown(KeyCode.W))
-            {
-                onCast?.Invoke(KeyCode.W);
-            }
+                onCastStart?.Invoke(KeyCode.W);
+            if (Input.GetKeyUp(KeyCode.W))
+                onCastEnd?.Invoke(KeyCode.W);
+
             if (Input.GetKeyDown(KeyCode.E))
-            {
-                onCast?.Invoke(KeyCode.E);
-            }
+                onCastStart?.Invoke(KeyCode.E);
+            if (Input.GetKeyUp(KeyCode.E))
+                onCastEnd?.Invoke(KeyCode.E);
+
             if (Input.GetKeyDown(KeyCode.R))
-            {
-                onCast?.Invoke(KeyCode.R);
-            }
+                onCastStart?.Invoke(KeyCode.R);
+            if (Input.GetKeyUp(KeyCode.R))
+                onCastEnd?.Invoke(KeyCode.R);
+
+            if (Input.GetKeyDown(KeyCode.A))
+                onAttackMovePrime?.Invoke();
+
         }
 
         public void ChangeCursorVisibility(bool isVisible)
