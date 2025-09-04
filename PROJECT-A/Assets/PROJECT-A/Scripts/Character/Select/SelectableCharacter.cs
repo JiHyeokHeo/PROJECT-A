@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace A
+namespace A.Tory
 {
     public class SelectableCharacter : MonoBehaviour, ISelectable
     {

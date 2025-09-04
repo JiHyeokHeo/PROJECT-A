@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 namespace A
 {
     // 추후 사이즈가 커지면 Controller로 분리
-    public class CharaterBase : MonoBehaviour, ISelectable
+    public class CharaterBase : MonoBehaviour, Tory.ISelectable
     {
         [Title("화면 판정 기준 설정 가능", titleAlignment: TitleAlignments.Centered)]
         [SerializeField] private GameObject selectionVisual;
