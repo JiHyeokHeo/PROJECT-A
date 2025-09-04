@@ -1,3 +1,4 @@
+using A;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,6 +51,12 @@ namespace TST
                 //if (GameDataModel.Singleton.GetItemData(targetItemData.itemID, out var itemData))
                 //    UserDataModel.Singleton.UseInventoryItem(itemData, useCount);
             }
+        }
+
+        [Button()]
+        public void ChangeMonsterState(AI_Controller monsterController, EAIStateId stateType)
+        {
+            monsterController.AIStateChange(stateType);
         }
 
         [Button()]
