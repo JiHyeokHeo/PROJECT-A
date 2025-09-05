@@ -7,10 +7,6 @@ namespace A
 {
     public class CopyBara_Rush : MonsterPattern
     {
-        public override float Cooldown => 10f;
-
-        public float castingTime = 3.0f;
-
         // 3초간 캐스팅하며 붉은 반투명한 선으로 범위 표시.
         // 투명도 50의 붉은 범위 표시 후, 투명도 70의 범위가 캐스팅 시간에
         // 걸쳐 차오르고 공격.범위가 다 차면 그 방향으로 돌진하며 돌진 중 접촉하는 플레이어에게 피해.
@@ -18,7 +14,7 @@ namespace A
         public override async UniTask Execute(CancellationToken ct)
         {
             float t = 0;
-            CustomEvent.Trigger(MonsterContext.Owner.gameObject, "Switch", ECopyBaraAttackPattern.RushReady);
+            CustomEvent.Trigger(context.Owner.gameObject, "Switch", ECopyBaraAttackPattern.RushReady);
             while (t < castingTime)
             {
                 // 혹시라도 캔슬 요청이 들어오면 캔슬 시켜라
@@ -31,26 +27,29 @@ namespace A
             }
 
             // CustomEvent -> 연동
-            Vector2 start = MonsterContext.RigidBody2D.position;
-            Vector2 end = MonsterContext.Target.position;
+            Vector2 start = context.RigidBody2D.position;
+            Vector2 end = context.Target.position;
             Vector2 dir = end - start;
 
-            CustomEvent.Trigger(MonsterContext.Owner.gameObject, "Switch", ECopyBaraAttackPattern.Rush);
-            MonsterContext.RigidBody2D.velocity = Vector2.zero; // 잔여 속도 제거
+            CustomEvent.Trigger(context.Owner.gameObject, "Switch", ECopyBaraAttackPattern.Rush);
+            context.RigidBody2D.velocity = Vector2.zero; // 잔여 속도 제거
          
-            while ((MonsterContext.RigidBody2D.position - end).sqrMagnitude > 1.0f)
+            while ((context.RigidBody2D.position - end).sqrMagnitude > 1.0f)
             {
                 ct.ThrowIfCancellationRequested();
 
-                MonsterContext.Owner.Move(dir, 10.0f);
+                context.Owner.Move(dir, context.MonsterConfig.MoveSpeed);
                 await UniTask.WaitForFixedUpdate(ct);
             }
-            CustomEvent.Trigger(MonsterContext.Owner.gameObject, "Switch", ECopyBaraAttackPattern.RushDone);
+            CustomEvent.Trigger(context.Owner.gameObject, "Switch", ECopyBaraAttackPattern.RushDone);
         }
 
-        public override void OnSetup(MonsterContext monsterContext)
+        public override void Init(MonsterContext context, MonsterPatternSetSO data)
         {
-            MonsterContext = monsterContext;
+            this.context = context;
+            cooldown = data.CoolDown;
+            weight = data.Weight;
+            castingTime = 3.0f;
         }
     }
 }

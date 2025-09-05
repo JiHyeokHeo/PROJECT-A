@@ -16,6 +16,6 @@ namespace A
         public float ChaseStopRange;
 
         // 몬스터 패턴
-        public PatternSetSO PatternSO;
+        public MonsterPatternSetSO[] PatternSO;
     }
 }

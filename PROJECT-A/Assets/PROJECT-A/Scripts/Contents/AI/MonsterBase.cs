@@ -33,7 +33,7 @@ namespace A
 
         float facingSing = 1; // ¿ÞÂÊ 1 ¿À¸¥ÂÊ -1
         #endregion
-        AI_Controller aI_Controller;
+        public AI_Controller aI_Controller;
         public PatternScheduler patternScheduler;
 
         public void ApplyDamage(float damage)
@@ -52,7 +52,7 @@ namespace A
             monsterContext.AnimationDriver = GetComponent<SpineAnimationDriver>();
             monsterContext.AnimationDriver.animSetSO = animationSetSO;
             monsterContext.MonsterConfig = monsterConfig;
-            monsterContext.Target = target.GetComponent<Rigidbody2D>();
+            //monsterContext.Target = target.GetComponent<Rigidbody2D>();
 
             patternScheduler = new PatternScheduler();
             patternScheduler.SetUp(monsterContext);
@@ -74,8 +74,8 @@ namespace A
 
         public void Move(Vector2 dir, float speed)
         {
-            Vector2 nextPosition = monsterContext.RigidBody2D.position + dir.normalized * speed * Time.fixedDeltaTime;
-            monsterContext.RigidBody2D.MovePosition(nextPosition);
+            Vector2 nextPosition = monsterContext.RigidBody2D.position + dir.normalized * speed * Time.deltaTime;
+            monsterContext.RigidBody2D.MovePosition(Vector2.Lerp(nextPosition, transform.position, Time.deltaTime * 10f)) ;
 
             int sign = dir.x <= 0 ? 1 : -1;
             if (sign != facingSing)

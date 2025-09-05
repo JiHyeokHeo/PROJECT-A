@@ -11,9 +11,14 @@ namespace A
         public SpineAnimationDriver AnimationDriver;
         //public EventHandler EventHandler; // 실시간 체력 처리를 여기서 할까..........???????????????????
         public MonsterConfigSO MonsterConfig;
-        public Rigidbody2D Target; // 플레이어
+        public Transform Target; // 플레이어
 
         public CancellationTokenSource CancellationToken = new CancellationTokenSource(); // 패턴 취소
+
+        public void ResetToken()
+        {
+            CancellationToken= new CancellationTokenSource();
+        }
 
         public float SqrAttackRange => MonsterConfig.AttackRange * MonsterConfig.AttackRange;
         public float SqrChaseStopRange => MonsterConfig.ChaseStopRange * MonsterConfig.ChaseStopRange;

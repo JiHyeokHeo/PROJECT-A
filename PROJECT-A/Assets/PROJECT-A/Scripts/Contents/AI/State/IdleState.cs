@@ -1,3 +1,7 @@
+
+
+using UnityEngine;
+
 namespace A
 {
     public class IdleState : AIState
@@ -21,7 +25,7 @@ namespace A
         public override void Tick(float dt)
         {
             // 특정 구간에 들어가면 State 변경
-            
+
 
 
         }
