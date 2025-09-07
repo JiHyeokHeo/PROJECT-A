@@ -70,13 +70,15 @@ namespace Character
             TST.InputSystem.onDragEnd += DragEndLogic;
             TST.InputSystem.onMove += IssueMove;
             TST.InputSystem.onAttackMovePrime += onAttackMovePrime;
+            TST.InputSystem.onCast += TryCast;
         }
         private void OnDisable()
         {
             TST.InputSystem.onDrag -= DragLogic;
             TST.InputSystem.onDragEnd -= DragEndLogic;
             TST.InputSystem.onMove -= IssueMove;
-            TST.InputSystem.onAttackMovePrime -= onAttackMovePrime; 
+            TST.InputSystem.onAttackMovePrime -= onAttackMovePrime;
+            TST.InputSystem.onCast -= TryCast;
         }
         
         // A 무브 토글
@@ -289,17 +291,41 @@ namespace Character
         {
             if (selected.Count == 0)
                 return;
+            Vector2 mouseWorld = worldCam.ScreenToWorldPoint(Input.mousePosition);
+            if (key == KeyCode.LeftShift)
+            {
+                
+                foreach (var caster in selected
+                    .Select(s => (s as Component)?.GetComponent<ICharacter>())
+                    .Where(c => c != null))
+                {
+                    var tr = caster.Transform;
+                    var dir = ((Vector2)mouseWorld - (Vector2)tr.position).normalized;
+                    var Roll = caster.RollAbility;
 
+                    if (Roll == null)
+                        continue;
+
+                    var lockComp = caster.Lock;
+                    if (lockComp != null && lockComp.IsLocked) continue;
+
+                    Roll.Roll(dir);
+                }
+                return;
+            }
             foreach (var caster in selected
             .Select(s => (s as Component)?.GetComponent<ICharacter>())
             .Where(c => c != null))
             {
+                var lockComp = caster.Lock;
+                if (lockComp != null && lockComp.IsLocked) continue;
                 var SkillSet = caster.SkillSet;
                 if (SkillSet == null) 
                     continue;
 
                 var skill = SkillSet.Skills.FirstOrDefault(s => s.HotKey == key && s.CanCast(caster));
-                if (skill == null) continue;
+                if (skill == null) 
+                    continue;
 
                 switch (skill.Type)
                 {

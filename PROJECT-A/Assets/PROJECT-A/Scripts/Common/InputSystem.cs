@@ -13,8 +13,7 @@ namespace TST
         public static Action onDragEnd;
         public static Action onMove;
         public static Action onAttackMovePrime;
-        public static Action<KeyCode> onCastStart;
-        public static Action<KeyCode> onCastEnd;
+        public static Action<KeyCode> onCast;
 
         private void Start()
         {
@@ -47,26 +46,19 @@ namespace TST
             if (Input.GetMouseButtonDown(1))
                 onMove?.Invoke();
 
-            if (Input.GetKeyDown(KeyCode.Q))
-                onCastStart?.Invoke(KeyCode.Q);
             if (Input.GetKeyUp(KeyCode.Q))
-                onCastEnd?.Invoke(KeyCode.Q);
+                onCast?.Invoke(KeyCode.Q);
             
-            if (Input.GetKeyDown(KeyCode.W))
-                onCastStart?.Invoke(KeyCode.W);
             if (Input.GetKeyUp(KeyCode.W))
-                onCastEnd?.Invoke(KeyCode.W);
+                onCast?.Invoke(KeyCode.W);
 
-            if (Input.GetKeyDown(KeyCode.E))
-                onCastStart?.Invoke(KeyCode.E);
             if (Input.GetKeyUp(KeyCode.E))
-                onCastEnd?.Invoke(KeyCode.E);
+                onCast?.Invoke(KeyCode.E);
 
-            if (Input.GetKeyDown(KeyCode.R))
-                onCastStart?.Invoke(KeyCode.R);
             if (Input.GetKeyUp(KeyCode.R))
-                onCastEnd?.Invoke(KeyCode.R);
-
+                onCast?.Invoke(KeyCode.R);
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+                onCast?.Invoke(KeyCode.LeftShift);
             if (Input.GetKeyDown(KeyCode.A))
                 onAttackMovePrime?.Invoke();
 

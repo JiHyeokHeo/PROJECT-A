@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TST;
 using UnityEngine;
 
-namespace A
+namespace A.Pop
 {
     public class SelectionManager : SingletonBase<SelectionManager>
     {

@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace A
+namespace A.Pop
 {
     // 추후 사이즈가 커지면 Controller로 분리
     public class CharaterBase : MonoBehaviour, ISelectable

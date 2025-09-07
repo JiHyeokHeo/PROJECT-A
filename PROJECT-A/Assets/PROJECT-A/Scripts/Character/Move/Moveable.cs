@@ -14,7 +14,9 @@ public class Moveable : MonoBehaviour, IMovable
     
     // 웨이 포인트에 대해 "충분히 가까움" 판정 반경 
     [SerializeField] private float waypointArriveDist = 0.12f;
-    
+
+    [SerializeField] private int maxAllyScan = 32;
+    private Collider2D[] _allyBuffer;
     // 가속/감속 계수
     [SerializeField] private float accel = 15f;
 
@@ -33,6 +35,7 @@ public class Moveable : MonoBehaviour, IMovable
     private bool hasPath;
     //최종 목표
     private Vector2 finalGoal;
+
     // 새 명령을 연달아 찍을 때 떨림 방지
     [SerializeField] 
     private float separationPauseOnNewOrder = 0.08f;
@@ -43,7 +46,6 @@ public class Moveable : MonoBehaviour, IMovable
     private IStats stats;
     public bool CanMove => true;
 
-    
     public void Stop()
     {
         hasPath = false;
@@ -95,12 +97,10 @@ public class Moveable : MonoBehaviour, IMovable
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;      // 탑뷰라 중력 끄기
         rb.freezeRotation = true; // 충돌로 회전하지 않게 잠금
-
+        _allyBuffer = new Collider2D[maxAllyScan];
         stats = GetComponent<IStats>();
         if (usePathfinder)
-        {
             pathfinder = FindObjectOfType<NavPathfinder>();
-        }
     }
 
     void FixedUpdate()
@@ -153,14 +153,19 @@ public class Moveable : MonoBehaviour, IMovable
         Vector2 sep = Vector2.zero;
         if (Time.time >= _separationResumeTime && separationRadius > 0.01f)
         {
-            var hits = Physics2D.OverlapCircleAll(rb.position, separationRadius, allyMask);
-            foreach (var h in hits)
+            int count = Physics2D.OverlapCircleNonAlloc(
+                rb.position, separationRadius, _allyBuffer, allyMask);
+
+            for (int i = 0; i < count; i++)
             {
-                if (h.attachedRigidbody == rb) continue;
+                var h = _allyBuffer[i];
+                if (!h || h.attachedRigidbody == rb) continue;
+
                 Vector2 away = (Vector2)rb.position - (Vector2)h.transform.position;
                 float d = Mathf.Max(away.magnitude, 0.2f);
-                sep += away.normalized * (1f / d);
+                sep += away / d; // away.normalized * (1f / d)
             }
+
             sep *= separationStrength * moveSpeed * 0.5f;
             sep = Vector2.ClampMagnitude(sep, moveSpeed * 0.6f);
         }

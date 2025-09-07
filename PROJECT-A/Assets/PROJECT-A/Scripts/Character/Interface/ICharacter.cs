@@ -13,6 +13,11 @@ namespace A
         public IMovable Movable { get; }
         public IStateMachine StateMachine { get;}
         public ISkillSet SkillSet { get; }
+
+        public RollAbility RollAbility { get; }
+        public ActionLock Lock { get; }
+
+        public CharacterAnimatorDriver Driver { get; }
         public CharacterCombat CharacterCombat { get; }
     }
 }

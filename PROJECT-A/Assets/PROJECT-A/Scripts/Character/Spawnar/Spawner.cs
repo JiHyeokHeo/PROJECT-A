@@ -9,11 +9,12 @@ public class Spawner : MonoBehaviour
     void Start()
     {
         var start = new Vector2(-2, 2);
-        for (int i = 0; i < 4; i++)
-        {
-            var p = start + new Vector2(i % 2, i / 2);
-            Instantiate(CharacterPrefab, p, Quaternion.identity);
-        }
-        Instantiate(bossPrefab, new Vector2(4, 2), Quaternion.identity);
+        Instantiate(CharacterPrefab, start, Quaternion.identity);
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    var p = start + new Vector2(i % 2, i / 2);
+        //    Instantiate(CharacterPrefab, p, Quaternion.identity);
+        //}
+        //Instantiate(bossPrefab, new Vector2(4, 2), Quaternion.identity);
     }
 }

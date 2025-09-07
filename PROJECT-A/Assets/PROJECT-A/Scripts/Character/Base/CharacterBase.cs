@@ -15,6 +15,10 @@ namespace A
         public IStateMachine StateMachine { get; private set; }
         public ISkillSet SkillSet { get; private set; }
         public CharacterCombat CharacterCombat { get; private set; }
+
+        public RollAbility RollAbility { get; private set; }
+        public ActionLock Lock { get; private set; }
+        public CharacterAnimatorDriver Driver { get; private set; }
        
 
         void Awake()
@@ -25,6 +29,9 @@ namespace A
             StateMachine = GetComponent<IStateMachine>();
             SkillSet = GetComponent<ISkillSet>();
             CharacterCombat = GetComponent<CharacterCombat>();
+            Lock = GetComponent<ActionLock>();
+            RollAbility = GetComponent<RollAbility>();
+            Driver = GetComponent<CharacterAnimatorDriver>();
         }
 
         protected virtual void OnEnable()
