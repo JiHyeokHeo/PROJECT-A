@@ -19,6 +19,8 @@ namespace A
         public RollAbility RollAbility { get; private set; }
         public ActionLock Lock { get; private set; }
         public CharacterAnimatorDriver Driver { get; private set; }
+
+        public SpineSideFlip2D SpineSideFlip { get; private set; }
        
 
         void Awake()
@@ -32,6 +34,7 @@ namespace A
             Lock = GetComponent<ActionLock>();
             RollAbility = GetComponent<RollAbility>();
             Driver = GetComponent<CharacterAnimatorDriver>();
+            SpineSideFlip = GetComponent<SpineSideFlip2D>();
         }
 
         protected virtual void OnEnable()

@@ -11,7 +11,7 @@ public class KnightSlash : SkillBase
 
     public override KeyCode HotKey => KeyCode.Q;
     public override ActionNumber ActionNumber => ActionNumber.SkillQ;
-    public override SkillTargetType Type => SkillTargetType.None;
+    public override SkillTargetType Type => SkillTargetType.Point;
     public override float CoolDown => 3f;
     public override float Range => 1.6f;
 

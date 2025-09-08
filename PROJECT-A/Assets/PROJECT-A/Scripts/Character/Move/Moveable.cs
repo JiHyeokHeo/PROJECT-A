@@ -28,6 +28,8 @@ public class Moveable : MonoBehaviour, IMovable
     [SerializeField] private bool usePathfinder = true;
     private IPathfinder pathfinder;
 
+    [SerializeField] private SpineSideFlip2D spineSideFlip;
+
     // 물리 이동 주체
     private Rigidbody2D rb;
     private readonly Queue<Vector2> waypoints = new();
@@ -45,7 +47,6 @@ public class Moveable : MonoBehaviour, IMovable
 
     private IStats stats;
     public bool CanMove => true;
-
     public void Stop()
     {
         hasPath = false;
@@ -94,6 +95,7 @@ public class Moveable : MonoBehaviour, IMovable
 
     void Awake()
     {
+        spineSideFlip = GetComponent<SpineSideFlip2D>();
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;      // 탑뷰라 중력 끄기
         rb.freezeRotation = true; // 충돌로 회전하지 않게 잠금
@@ -174,5 +176,7 @@ public class Moveable : MonoBehaviour, IMovable
         Vector2 steer = (desired - rb.velocity) + sep;
         Vector2 newVel = rb.velocity + steer * Time.fixedDeltaTime * accel;
         rb.velocity = Vector2.ClampMagnitude(newVel, moveSpeed);
+        spineSideFlip.FaceByVelocity(rb.velocity);
+       
     }
 }

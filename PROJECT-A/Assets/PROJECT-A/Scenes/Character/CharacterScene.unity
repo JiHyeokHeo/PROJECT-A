@@ -427,7 +427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CharacterPrefab: {fileID: 744483038034839407, guid: 301e903fd905a4441a1f0faa9ff2094c, type: 3}
-  bossPrefab: {fileID: 744483038034839407, guid: 301e903fd905a4441a1f0faa9ff2094c, type: 3}
+  bossPrefab: {fileID: 744483038034839407, guid: 7d7d7ac97600fbb439e07bfb5678bc7a, type: 3}
 --- !u!4 &645820653
 Transform:
   m_ObjectHideFlags: 0

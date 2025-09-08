@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.PlayerSettings;
 
 namespace Character
 {
@@ -61,7 +62,6 @@ namespace Character
             // UI 무시
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 return;
-            Debug.Log(attackMovePrimed);
         }
 
         private void OnEnable()
@@ -228,9 +228,8 @@ namespace Character
             for (int i = 0; i < ordered.Count; i++)
             {
                 var unit = ordered[i];
-                //var go = ((Component)unit.Transform).gameObject;
-                //var combat = go.GetComponent<CharacterCombat>();
-
+                if (unit.Lock.IsLocked)
+                    continue;
                 if (unit.CharacterCombat != null)
                 {
                     // 명시 타깃 공격: 타깃이 사라지면 해당 슬롯 위치로 이동하게 폴백 포인트 전달
@@ -248,8 +247,6 @@ namespace Character
             }
         }
 
-        //추후에 groundlayer 뿐만 아니라 몬스터(보스)가 있으면 
-        // 공격 사거리 범위까지 들어가서 공격하는 것도 추가(롤처럼)
         void IssueMove()
         {
             if (_lastIssueFrame == Time.frameCount) return;
@@ -263,6 +260,7 @@ namespace Character
             {
                 return;
             }
+            
             Vector2 wp = worldCam.ScreenToWorldPoint(Input.mousePosition);
             if (!Physics2D.OverlapPoint(wp, groundLayer))
                 return;
@@ -282,6 +280,8 @@ namespace Character
             var slots = FormationUtility.BuildGridSlots(origin, forward.normalized, ordered.Count(), spacing);
             for (int i = 0; i < ordered.Count(); i++)
             {
+                if (ordered[i].Lock != null && ordered[i].Lock.IsLocked)
+                    continue;
                 ordered[i].CharacterCombat?.CancelAll();
                 ordered[i].Movable?.MoveTo(slots[i]);
             }
@@ -326,7 +326,9 @@ namespace Character
                 var skill = SkillSet.Skills.FirstOrDefault(s => s.HotKey == key && s.CanCast(caster));
                 if (skill == null) 
                     continue;
-
+                var flipper = caster.SpineSideFlip;
+                Vector2 p = worldCam.ScreenToWorldPoint(Input.mousePosition);
+                
                 switch (skill.Type)
                 {
                     case SkillTargetType.None:
@@ -335,6 +337,7 @@ namespace Character
 
                     case SkillTargetType.Point:
                         Vector2 point = worldCam.ScreenToWorldPoint(Input.mousePosition);
+                        flipper?.FaceByPoint(p);
                         skill.Cast(caster, point, null);
                         break;
 
@@ -344,7 +347,11 @@ namespace Character
                         var hit = Physics2D.OverlapPoint(wp, characterLayer);
                         var target = hit ? hit.GetComponentInParent<ISelectable>() : null;
                         if (target != null)
+                        {
+                            var tpos = ((Component)target).transform.position;
+                            flipper?.FaceByPoint(p);
                             skill.Cast(caster, ((Component)target).transform.position, target);
+                        }
                         break;
                 }
             }

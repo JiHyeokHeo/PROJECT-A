@@ -17,7 +17,7 @@ public class CharacterCombat : MonoBehaviour
 
     public ICharacter Self { get; private set; } // 시전자
 
-    private ICharacter currentTarget; // 시전자
+    private ICharacter currentTarget; // 타겟
 
     private bool attackMoveActive; // A 무브 활성화 여부
     private Vector2 attackMoveDest;
@@ -132,18 +132,25 @@ public class CharacterCombat : MonoBehaviour
         if (isAttacking) return;
         if (Time.time < nextAttackReady)
             return;
+        if (Self.Lock != null && Self.Lock.IsLocked)
+            return;
         StartCoroutine(CoBasicAttack());
     }
 
     IEnumerator CoBasicAttack()
     {
         isAttacking = true;
-        Self.Movable?.MoveTo(transform.position);
+        Self.Movable?.Stop();
+
+        Self.Driver?.TriggerAction((int)ActionNumber.Attack);
+        Self.Lock?.LockFor(0.25f);
 
         yield return new WaitForSeconds(attackWindup);
 
+        var flipper = Self.SpineSideFlip;
         if (currentTarget != null && !currentTarget.Health.IsDead)
         {
+            flipper?.FaceByPoint(currentTarget.Transform.position);
             var dmg = new Damage { amount = baseDamage + (Self?.Stats?.Atk ?? 0f), kind = DamageKind.Physical, source = gameObject };
             CombatUtility.ApplyDamage(currentTarget, dmg);
         }

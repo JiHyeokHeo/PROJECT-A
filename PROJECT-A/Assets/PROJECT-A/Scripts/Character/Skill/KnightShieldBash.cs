@@ -8,6 +8,8 @@
 //{
 //    public override KeyCode HotKey => KeyCode.E;
 //    public override SkillTargetType Type => SkillTargetType.Point;
+//    public override ActionNumber ActionNumber => ActionNumber.SkillQ;
+//    public override float ActionTime => 0.35f;
 //    public override float CoolDown => 15f;
 //    public override float Range => 3f;
 //    [SerializeField] float dashTime = 0.25f;
@@ -32,5 +34,5 @@
 
 //        var parry = go.AddComponent<ParryBuff>();
 //    }
-  
+
 //}

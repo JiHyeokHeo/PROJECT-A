@@ -19,5 +19,7 @@ namespace A
 
         public CharacterAnimatorDriver Driver { get; }
         public CharacterCombat CharacterCombat { get; }
+
+        public SpineSideFlip2D SpineSideFlip { get; }
     }
 }

@@ -30,7 +30,10 @@ public abstract class SkillBase : ScriptableObject, ISkill
         driver?.TriggerAction((int)ActionNumber);
 
         var lockC = caster.Lock;
-        lockC.LockFor(ActionTime); 
+        lockC.LockFor(ActionTime);
+
+        var Moveable = caster.Movable;
+        Moveable?.Stop();
     }
 
     protected void MarkCast()
