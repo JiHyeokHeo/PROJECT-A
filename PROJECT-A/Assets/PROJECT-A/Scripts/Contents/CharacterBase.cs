@@ -30,12 +30,12 @@ namespace A
 
         void OnEnable()
         {
-            SelectionManager.Singleton.Register(this); // 추후 구조가 바뀔수도?
+            //SelectionManager.Singleton.Register(Torythis); // 추후 구조가 바뀔수도?
         }
 
         void OnDisable()
         {
-            SelectionManager.Singleton.UnRegister(this);
+            //SelectionManager.Singleton.UnRegister(this);
         }
 
         void Start()
@@ -91,12 +91,12 @@ namespace A
 
             if (Input.GetMouseButtonDown(1))
             {
-                if (SelectionManager.Singleton.current.Contains(this))
-                {
-                    isMoveing = true;
-                    Vector3 worldClick = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    targetRightClickScreen = new Vector2(worldClick.x, worldClick.y);
-                }
+                //if (SelectionManager.Singleton.current.Contains(this))
+                //{
+                //    isMoveing = true;
+                //    Vector3 worldClick = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                //    targetRightClickScreen = new Vector2(worldClick.x, worldClick.y);
+                //}
             }
 
             Vector2 pos = rb2d.position;
@@ -114,7 +114,7 @@ namespace A
 
         void ApplySelection(Rect screenRect)
         {
-            SelectionManager.Singleton.CollectSelectableObjects(this, screenRect);
+            //SelectionManager.Singleton.CollectSelectableObjects(this, screenRect);
         }
 
         void UpdateSelectionBox(Vector2 startScreen, Vector2 endScreen)

@@ -17,19 +17,19 @@ namespace A
             current.Clear();
             for (int i = 0; i < selectables.Count; i++) 
             {
-                if (SelectCheck(selectables[i], screenRect))
-                    current.Add(selectables[i]);
+                //if (SelectCheck(selectables[i], screenRect))
+                //    current.Add(selectables[i]);
             }
 
             Debug.Log($"현재 선택된 친구는 {current.Count}개 입니다.");
         }
 
-        bool SelectCheck(ISelectable obj, Rect screenRect)
-        {
-            Vector2 screenPoint = Camera.main.WorldToScreenPoint(obj.SelectionPivot.position);
+        //bool SelectCheck(ISelectable obj, Rect screenRect)
+        //{
+        //    //Vector2 screenPoint = Camera.main.WorldToScreenPoint(obj.SelectionPivot.position);
 
-            return screenRect.Contains(screenPoint);
-        }
+        //    //return screenRect.Contains(screenPoint);
+        //}
 
         private float deltaTime = 0f;
         private void Update()
