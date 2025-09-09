@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    stages {
+        stage('Prepare'){
+            steps {
+                git credentialsId : 'Tory',
+                    branch : 'main',
+                    url : 'https://github.com/JiHyeokHeo/PROJECT-A.git'
+            }
+        }
+        stage('test') {
+            steps {
+                echo 'test stage'
+            }
+        }
+        stage('build') {
+            steps {
+                echo 'build stage'
+            }
+        }
+        stage('docker build') {
+            steps {
+                echo 'docker build stage'
+            }
+        }
+    }
+}
