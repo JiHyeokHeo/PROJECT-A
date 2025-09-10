@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace A
         [SerializeReference] private AIState currentState;
         [SerializeReference] public AIState[] aiStates;
 
+        Collider2D[] hits = new Collider2D[4];
         private void Awake()
         {
             aiStates = new AIState[7];
@@ -56,12 +58,18 @@ namespace A
 
         void Update()
         {
-            currentState?.Tick(Time.deltaTime);
+            // 먼저 서칭 후 업데이트 
+            var next = currentState.CheckTransition();
+            AIStateChange(next); // 상태전환 검사
 
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                AIStateChange(EAIStateId.Attack);
-            }
+            SearchTarget();
+            currentState?.Tick(Time.deltaTime);
+        }
+
+        private void SearchTarget()
+        {
+            int count = Physics2D.OverlapCircleNonAlloc(monsterBase.monsterContext.RigidBody2D.position, monsterBase.monsterContext.Config.DetectRange, hits);
+            monsterBase.Target = count > 0 ? hits[0].gameObject : null;
         }
     }
 }

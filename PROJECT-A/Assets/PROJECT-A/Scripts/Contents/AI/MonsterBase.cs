@@ -1,17 +1,39 @@
+using Sirenix.OdinInspector.Editor.TypeSearch;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace A
 {
-    public class MonsterBase : MonoBehaviour/*, IDamage*/
+    public class MonsterBase : MonoBehaviour
     {
         public MonsterConfigSO monsterConfig;
         public SpineAnimationSetSO animationSetSO;
         public SpineAnimationDriver animationDriver;
         public MonsterContext monsterContext;
 
-        public GameObject target;
+        public bool isFriendly = false; // 밀리 보스몹이 존재할 경우
+        public GameObject Target
+        {
+            get
+            {
+                if (target != null)
+                    return target;
 
+                return null;
+            }
+
+            set
+            {
+                target = value;
+                if (target == null || monsterContext == null)
+                    return;
+                
+                monsterContext.Target = target.transform;
+            }
+        }
+
+        private GameObject target;
         // 일단은 MonsterBase에서 실시간 데이터 관리
         #region Temp Data 
         public float CurrentHP
@@ -33,12 +55,20 @@ namespace A
 
         float facingSing = 1; // 왼쪽 1 오른쪽 -1
         #endregion
-        AI_Controller aI_Controller;
+        public AI_Controller aI_Controller;
         public PatternScheduler patternScheduler;
+
+        // TODO : 추후 클래스 분할 필요
+        public GameObject[] warningSign = new GameObject[2];
 
         public void ApplyDamage(float damage)
         {
             CombatSystem.Singleton.ApplyDamage(damage);
+        }
+
+        public void SetInfo(int monsterId)
+        {
+            // 여기다가 SO 데이터 연동하면 될듯?
         }
 
         private void Awake()
@@ -51,8 +81,7 @@ namespace A
             animationDriver.animSetSO = animationSetSO;
             monsterContext.AnimationDriver = GetComponent<SpineAnimationDriver>();
             monsterContext.AnimationDriver.animSetSO = animationSetSO;
-            monsterContext.MonsterConfig = monsterConfig;
-            monsterContext.Target = target.GetComponent<Rigidbody2D>();
+            monsterContext.Config = monsterConfig;
 
             patternScheduler = new PatternScheduler();
             patternScheduler.SetUp(monsterContext);
@@ -64,29 +93,18 @@ namespace A
             
         }
 
-        void OnTriggerEnter2D(Collider2D other)
-        {
-            //if (other.transform.root.TryGetComponent(out IDamage damageInterface))
-            //{
-            //    damageInterface.ApplyDamage(monsterConfig.damage);
-            //}
-        }
-
         public void Move(Vector2 dir, float speed)
         {
-            Vector2 nextPosition = monsterContext.RigidBody2D.position + dir.normalized * speed * Time.fixedDeltaTime;
-            monsterContext.RigidBody2D.MovePosition(nextPosition);
+            Vector2 nextPosition = monsterContext.RigidBody2D.position + dir.normalized * speed * Time.deltaTime;
+            monsterContext.RigidBody2D.MovePosition(Vector2.Lerp(nextPosition, transform.position, Time.deltaTime * 10f)) ;
 
             int sign = dir.x <= 0 ? 1 : -1;
             if (sign != facingSing)
             {
                 facingSing = sign;
-                Vector3 s = transform.localScale;
-                s.x *= -1;
-                transform.localScale = s;
+                animationDriver.Flip();
             }
         }
-
 
         void OnDamaged(float dmg, Vector2 hitDir)
         {
@@ -95,8 +113,13 @@ namespace A
         
         void OnDead()
         {
-            // 죽으면 fsm 체인지
-            aI_Controller.AIStateChange(EAIStateId.Dead);
+            
+            
+        }
+
+        private void OnGUI()
+        {
+            
         }
     }
 }

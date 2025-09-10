@@ -11,6 +11,11 @@ namespace A
 
         public override EAIStateId aiStateId => EAIStateId.Dead;
 
+        public override EAIStateId CheckTransition()
+        {
+            return EAIStateId.None;
+        }
+
         public override void Enter()
         {
         }

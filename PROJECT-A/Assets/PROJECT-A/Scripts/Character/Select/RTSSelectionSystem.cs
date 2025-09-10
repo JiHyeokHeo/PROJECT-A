@@ -61,7 +61,7 @@ namespace Character
             // UI 무시
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                 return;
-            Debug.Log(attackMovePrimed);
+            //Debug.Log(attackMovePrimed);
         }
 
         private void OnEnable()
