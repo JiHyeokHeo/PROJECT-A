@@ -59,7 +59,7 @@ namespace A
         public PatternScheduler patternScheduler;
 
         // TODO : 추후 클래스 분할 필요
-        public GameObject warningSign;
+        public GameObject[] warningSign = new GameObject[2];
 
         public void ApplyDamage(float damage)
         {
@@ -114,6 +114,11 @@ namespace A
         void OnDead()
         {
             
+            
+        }
+
+        private void OnGUI()
+        {
             
         }
     }

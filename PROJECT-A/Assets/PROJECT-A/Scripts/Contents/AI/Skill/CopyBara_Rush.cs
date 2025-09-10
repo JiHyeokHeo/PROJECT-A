@@ -5,6 +5,12 @@ using UnityEngine;
 
 namespace A
 {
+    enum WarningSign
+    {
+        Outer,
+        Inner,
+    }
+
     public class CopyBara_Rush : MonsterPattern
     {
         // 3초간 캐스팅하며 붉은 반투명한 선으로 범위 표시.
@@ -12,7 +18,7 @@ namespace A
         // 걸쳐 차오르고 공격.범위가 다 차면 그 방향으로 돌진하며 돌진 중 접촉하는 플레이어에게 피해.
 
         // WarningSign;
-        SpriteRenderer spriteRenderer;
+        SpriteRenderer[] spriteRenderer;
 
         public override async UniTask Execute(CancellationToken ct)
         {
@@ -26,30 +32,29 @@ namespace A
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
             // 거리에 맞게 스케일 조절
-            context.Owner.warningSign.transform.localRotation =  Quaternion.Euler(0, 0, angle);
+            context.Owner.warningSign[(int)WarningSign.Outer].transform.localRotation =  Quaternion.Euler(0, 0, angle);
             float distance = (start - end).magnitude;
-            context.Owner.warningSign.transform.localScale = new Vector3(distance, 3, 1);
+            context.Owner.warningSign[(int)WarningSign.Outer].transform.localScale = new Vector3(distance, 3, 1);
 
-            Color c = spriteRenderer.color;
-            if (spriteRenderer)
+            Color c = spriteRenderer[(int)WarningSign.Outer].color;
+            if (spriteRenderer[(int)WarningSign.Outer])
             {
                 SetWarningSign(true);    // 워닝 사인 on off
-                c.a = 0.3f;
-                spriteRenderer.color = c;
             }
 
+            // TODO : 맞았을 때 Flinch 애니메이션 재생 및 Visual Scripting Add
+
+            Transform warnTr = context.Owner.warningSign[(int)WarningSign.Inner].transform;
+            float localStartScaleX = warnTr.localScale.x;
             while (t < castingTime)
             {
                 // 혹시라도 캔슬 요청이 들어오면 캔슬 시켜라
                 ct.ThrowIfCancellationRequested();
                 // 붉은 화면 뜨도록 설정
 
-                if (spriteRenderer)
-                {
-                    float dur = t / castingTime;
-                    c.a = Mathf.Lerp(0.2f, 0.6f, dur);
-                    spriteRenderer.color = c;
-                }
+                float dur = t / castingTime;
+                float lerpScale = Mathf.Lerp(localStartScaleX, 1f, dur);
+                warnTr.localScale = new Vector3(lerpScale, 1f, 1f);
 
                 t += Time.deltaTime;
                 Debug.Log("붉은화면 Logging Cancel 가능!");
@@ -78,7 +83,7 @@ namespace A
 
         public override void Init(MonsterContext context, MonsterPatternSetSO data)
         {
-            spriteRenderer = context.Owner.warningSign.GetComponentInChildren<SpriteRenderer>();
+            spriteRenderer = context.Owner.warningSign[(int)WarningSign.Outer].GetComponentsInChildren<SpriteRenderer>();
             this.context = context;
             cooldown = data.CoolDown;
             weight = data.Weight;
@@ -87,7 +92,8 @@ namespace A
 
         private void SetWarningSign(bool on)
         {
-            context.Owner.warningSign.SetActive(on);
+            context.Owner.warningSign[(int)WarningSign.Inner].transform.localScale = new Vector3(0.3f, 1f, 1f); // 하드코딩 좀 바꿉시다
+            context.Owner.warningSign[(int)WarningSign.Outer].SetActive(on);
         }
     }
 }
