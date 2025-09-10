@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace A
+namespace Character
 {
-    public class SimpleCharacter : CharacterBase
+    public class KnightCharacter : CharacterBase
     {
+       
     }
 }

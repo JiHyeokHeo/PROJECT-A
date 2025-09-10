@@ -1,38 +1,47 @@
-﻿//using A;
-//using Character;
-//using System.Collections;
-//using UnityEngine;
+﻿using Character;
+using System.Collections;
+using UnityEngine;
 
-//[CreateAssetMenu(menuName = "Skills/Knight")]
-//public class KnightShieldBash : SkillBase
-//{
-//    public override KeyCode HotKey => KeyCode.E;
-//    public override SkillTargetType Type => SkillTargetType.Point;
-//    public override ActionNumber ActionNumber => ActionNumber.SkillQ;
-//    public override float ActionTime => 0.35f;
-//    public override float CoolDown => 15f;
-//    public override float Range => 3f;
-//    [SerializeField] float dashTime = 0.25f;
-//    bool isDamage = false;
+[CreateAssetMenu(menuName = "Skills/Knight/knightShieldBash")]
+public class KnightShieldBash : SkillBase
+{
+    [SerializeField]
+    float damage = 60f;
+    [SerializeField]
+    float dashDistance = 1.5f;
+    [SerializeField]
+    float dashSpeed = 12f;
+    [SerializeField]
+    float hitRadius = 0.5f;
+    [SerializeField]
+    LayerMask enemyMask = default;
+    [SerializeField]
+    bool stopOnFirstHit = true;
 
-//    [SerializeField] float hitRadius = 0.7f;
+    [SerializeField]
+    float slamHold = 0.6f;
+    public override KeyCode HotKey => KeyCode.E;
+    public override ActionNumber ActionNumber => ActionNumber.SkillE;
+    public override SkillTargetType Type => SkillTargetType.Point;
 
-//    public override void Cast(ICharacter caster, Vector2 point, ISelectable target)
-//    {
-//        if (!CanCast(caster)) return;
-//        var mb = ((Component)caster.Transform).GetComponent<MonoBehaviour>();
-//    }
+    public override float CoolDown => 3f;
+    public override float Range => dashDistance;
+    public override float ActionTime => slamHold + Mathf.Max(0.05f, dashDistance / Mathf.Max(0.01f, dashSpeed)) + 0.1f;
+    
+  
 
-//    IEnumerator Co(ICharacter caster, Vector2 point)
-//    {
-//        var go = ((Component)caster.Transform).gameObject;
-//        var move = go.GetComponent<IMovable>();
-//        var rb = go.GetComponent<Rigidbody2D>();
+    public override void Cast(ICharacter caster, Vector2 point, ISelectable target)
+    {
+        base.Cast(caster, point, target);
 
-//        Vector2 dir = (point - (Vector2)caster.Transform.position).normalized;
-//        float speed = Range / dashTime;
+        caster.SpineSideFlip.FaceByPoint(point);
 
-//        var parry = go.AddComponent<ParryBuff>();
-//    }
+        var go = caster.Transform.gameObject;
+        var runner = go.GetComponent<ShieldBashRunner>();
+        if (!runner)
+            runner = go.AddComponent<ShieldBashRunner>();
+        runner.Run(caster, point, damage, dashDistance, dashSpeed, hitRadius, enemyMask, stopOnFirstHit,slamHold);
 
-//}
+        MarkCast();
+    }
+}

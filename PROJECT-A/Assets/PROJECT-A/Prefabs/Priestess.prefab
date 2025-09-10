@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 6895795610363336759}
   - component: {fileID: 6586956317898454729}
   - component: {fileID: 9146133446131719715}
-  - component: {fileID: 2481648550207426764}
   - component: {fileID: 6213442967332350103}
   - component: {fileID: 4979182265808527356}
   - component: {fileID: 6008551335032048049}
@@ -27,8 +26,10 @@ GameObject:
   - component: {fileID: 8308672797025607226}
   - component: {fileID: 9063239032805259066}
   - component: {fileID: 1814748949173915100}
-  m_Layer: 7
-  m_Name: Character 1
+  - component: {fileID: -8160510974028975209}
+  - component: {fileID: 3156283606339152761}
+  m_Layer: 6
+  m_Name: Priestess
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,8 +195,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 100
-  m_LinearDrag: 1
+  m_Mass: 10
+  m_LinearDrag: 6
   m_AngularDrag: 10
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -205,7 +206,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -244,18 +245,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.17008364, y: 0.9746586}
   m_Size: {x: 1.3686163, y: 1.9521143}
   m_Direction: 0
---- !u!114 &2481648550207426764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744483038034839407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec3738891f80e7c43b95359007785fa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6213442967332350103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,7 +297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillQ: {fileID: 11400000, guid: 6e916d4e6fdfab344bbe9395233c4817, type: 2}
   skillW: {fileID: 11400000, guid: 5af6189f80768d942a415351f17fc2c2, type: 2}
-  skillE: {fileID: 0}
+  skillE: {fileID: 11400000, guid: 5ba72d693848aac4c8f886d9a06ac610, type: 2}
   skillR: {fileID: 11400000, guid: 8e867de2c153fe9488034c5f208e7930, type: 2}
 --- !u!114 &6176890722989963045
 MonoBehaviour:
@@ -333,6 +322,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   usePathfinder: 1
+  spineSideFlip: {fileID: 0}
   separationPauseOnNewOrder: 0.08
 --- !u!114 &2804647240374652124
 MonoBehaviour:
@@ -406,6 +396,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rollSpeed: 8
   rollTime: 0.25
+--- !u!114 &-8160510974028975209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744483038034839407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acbea4a089e939048bf1ffa861a2021c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skeleton: {fileID: 5895121347772130072}
+  facesRightByDefault: 1
+  minXSpeedToFlip: 0.01
+  freezeWhileLocked: 1
+--- !u!114 &3156283606339152761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744483038034839407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26c8378fa5594994eb23dc4ff0fcd45b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3295288174911841160
 GameObject:
   m_ObjectHideFlags: 0

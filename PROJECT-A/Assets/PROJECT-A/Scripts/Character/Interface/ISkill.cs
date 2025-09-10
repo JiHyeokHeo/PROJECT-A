@@ -1,6 +1,5 @@
-﻿using A;
-using UnityEngine;
-
+﻿using UnityEngine;
+using Character;
 public interface ISkill
 {
     KeyCode HotKey { get; }

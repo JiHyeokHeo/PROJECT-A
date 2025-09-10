@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace A
+namespace Character
 {
     public class NavPathfinder : MonoBehaviour, IPathfinder
     {

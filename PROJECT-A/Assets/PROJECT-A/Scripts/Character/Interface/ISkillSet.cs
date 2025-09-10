@@ -1,4 +1,4 @@
-using A;
+using Character;
 using System.Collections.Generic;
 
 public interface ISkillSet

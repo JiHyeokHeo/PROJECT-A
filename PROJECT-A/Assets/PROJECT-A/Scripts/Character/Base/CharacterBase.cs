@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace A
+namespace Character
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public abstract class CharacterBase : MonoBehaviour, ICharacter

@@ -1,5 +1,4 @@
-﻿using A;
-using Character;
+﻿using Character;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor.Validation;
 using System.Collections.Generic;
@@ -177,6 +176,5 @@ public class Moveable : MonoBehaviour, IMovable
         Vector2 newVel = rb.velocity + steer * Time.fixedDeltaTime * accel;
         rb.velocity = Vector2.ClampMagnitude(newVel, moveSpeed);
         spineSideFlip.FaceByVelocity(rb.velocity);
-       
     }
 }

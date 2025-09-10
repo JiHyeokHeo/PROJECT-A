@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace A
+namespace Character
 {
     public interface ISelectable
     {
