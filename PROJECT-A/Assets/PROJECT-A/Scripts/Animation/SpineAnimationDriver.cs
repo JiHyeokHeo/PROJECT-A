@@ -65,6 +65,12 @@ namespace A
             state.SetEmptyAnimations(0);
         }
 
+        // 이것은 오직 플레이어 플립을 위한 함수입니다 쓰지마세요..
+        public void Flip()
+        {
+            if (skeleton != null)
+                skeleton.Skeleton.ScaleX *= -1f;
+        }
 
         public void PlayIdle() => PlayLoop(animSetSO?.Idle);
         public void PlayMove() => PlayLoop(animSetSO?.Move);

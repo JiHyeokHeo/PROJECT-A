@@ -1,11 +1,16 @@
 using System;
 using UnityEngine;
 
-public enum PatternID
+public enum EPatternID
 {
     Rush,
 
     None,
+}
+
+public enum EMonsterID
+{
+    CopyBara = 10000000,
 }
 
 namespace A
@@ -14,7 +19,8 @@ namespace A
     [CreateAssetMenu(menuName = "PROJECT.A/Monster/PatternSetSO", fileName = "PatternSetSO")]
     public class MonsterPatternSetSO : ScriptableObject
     {
-        public PatternID PatternID; // 추후 뭐 인트로 바꿉시다
+        public int monsterID;
+        public EPatternID PatternID; // 추후 뭐 인트로 바꿉시다
         public float CoolDown;
         [Range(0, 1)] public float Weight = 0.3f; // 가중도 
     }

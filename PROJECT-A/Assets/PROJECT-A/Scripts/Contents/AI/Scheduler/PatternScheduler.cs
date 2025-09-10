@@ -19,10 +19,11 @@ namespace A
         public void SetUp(MonsterContext monsterContext)
         {
             this.monsterContext = monsterContext;
-            var arr = monsterContext.MonsterConfig.PatternSO;
-            for (int i = 0; i < monsterContext.MonsterConfig.PatternSO.Length; i++)
+            var patternArr = monsterContext.Config.PatternSO;
+            for (int i = 0; i < monsterContext.Config.PatternSO.Length; i++)
             {
-                var pattern = PatternFactory.Create(arr[i], monsterContext);
+                var pattern = PatternFactory.Create(patternArr[i]);
+                pattern.Init(monsterContext, patternArr[i]);
                 patterns.Add(pattern);
             }
             BuildFromConfig();
@@ -30,15 +31,15 @@ namespace A
 
         void BuildFromConfig()
         {
-            var set = monsterContext?.MonsterConfig.PatternSO;
+            var set = monsterContext?.Config.PatternSO;
 
-            if (monsterContext.MonsterConfig.PatternSO.Length == 0 ) 
+            if (monsterContext.Config.PatternSO.Length == 0 ) 
             {
                 total = 0;
                 return;
             }
             
-            total = monsterContext.MonsterConfig.PatternSO.Sum(index => Mathf.Max(0.001f, index.Weight));
+            total = monsterContext.Config.PatternSO.Sum(index => Mathf.Max(0.001f, index.Weight));
         }
 
         public async UniTask ExecuteNext(CancellationToken ct)

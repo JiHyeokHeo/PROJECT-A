@@ -6,6 +6,7 @@ namespace A
 {
     public abstract class MonsterPattern
     {
+        // TODO : 인터페이스를 통한 CoolDown Casting 더 분리 가능, 추후 필요하다면 분리
         protected MonsterContext context;
         protected float cooldown;
         protected float castingTime;

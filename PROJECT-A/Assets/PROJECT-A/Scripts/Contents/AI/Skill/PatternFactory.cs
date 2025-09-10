@@ -3,20 +3,35 @@ using System;
 
 public class PatternFactory
 {
-    public static MonsterPattern Create(MonsterPatternSetSO definition, MonsterContext context)
+    // TODO : È¤½Ã ÄÁÅÙÃ÷°¡ ´Ã¾î³­´Ù¸é Dictionary Mapping °í·Á
+    public static MonsterPattern Create(MonsterPatternSetSO definition)
     {
-        MonsterPattern pattern;
+        MonsterPattern pattern = null;
 
-        switch (definition.PatternID)
+        switch (definition.monsterID)
         {
-            case PatternID.Rush: 
-                pattern = new CopyBara_Rush(); 
+            case (int)EMonsterID.CopyBara:
+                CreatePattern(definition.PatternID, out pattern);
                 break;
+
             default:
-                throw new ArgumentOutOfRangeException(nameof(definition.PatternID), definition.PatternID, null);
+                throw new ArgumentOutOfRangeException(nameof(definition.monsterID), definition.monsterID, null);
         }
 
-        pattern.Init(context, definition);
+        return pattern;
+    }
+
+    static MonsterPattern CreatePattern(EPatternID patternId, out MonsterPattern pattern)
+    {
+        switch (patternId)
+        {
+            case EPatternID.Rush:
+            pattern = new CopyBara_Rush();
+            break;
+        default:
+            throw new ArgumentOutOfRangeException(nameof(patternId), patternId, null);
+        }
+
         return pattern;
     }
 }
