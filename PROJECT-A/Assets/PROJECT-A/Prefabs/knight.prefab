@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2291124775371735512}
   - component: {fileID: 2607887856312980836}
   - component: {fileID: 7723674442319262596}
-  - component: {fileID: 7714648324596493302}
   - component: {fileID: 1296503986966853097}
   - component: {fileID: 6731969746729467857}
   - component: {fileID: 5854477535401466303}
@@ -167,22 +166,6 @@ MonoBehaviour:
     layerMixModes: 01000000
     layerBlendModes: 01000000
   updateTiming: 1
---- !u!114 &7714648324596493302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247116756035380177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f726fb798ad621458c431cb9966d91d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boneRoot: {fileID: 0}
-  flipBy180DegreeRotation: 0
-  skeletonRenderer: {fileID: 7723674442319262596}
-  skeletonGraphic: {fileID: 0}
 --- !u!50 &1296503986966853097
 Rigidbody2D:
   serializedVersion: 4
@@ -258,6 +241,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHp: 100
+  cur: 0
+  dead: 0
 --- !u!114 &7555618814282140538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,7 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6267f252520e364881e74d1945cb751, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillQ: {fileID: 11400000, guid: 6e916d4e6fdfab344bbe9395233c4817, type: 2}
+  skillQ: {fileID: 11400000, guid: a09c77a99afb8fc46b122a6bec48af66, type: 2}
   skillW: {fileID: 11400000, guid: 5af6189f80768d942a415351f17fc2c2, type: 2}
   skillE: {fileID: 11400000, guid: 5ba72d693848aac4c8f886d9a06ac610, type: 2}
   skillR: {fileID: 11400000, guid: 8e867de2c153fe9488034c5f208e7930, type: 2}

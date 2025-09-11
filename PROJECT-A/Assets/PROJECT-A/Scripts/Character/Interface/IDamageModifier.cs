@@ -5,3 +5,8 @@ public interface IDamageModifier
 {
     float ModifyDamage(float incoming, DamageKind kind, ICharacter target, GameObject src);
 }
+
+public interface IOutgoingDamageModifier
+{
+    float ModifyOutgoing(float baseAmount, ICharacter attacker, ICharacter target, ref DamageKind kind);
+}
