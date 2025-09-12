@@ -36,7 +36,6 @@ namespace A
             float distance = (start - end).magnitude;
             context.Owner.warningSign[(int)WarningSign.Outer].transform.localScale = new Vector3(distance, 3, 1);
 
-            Color c = spriteRenderer[(int)WarningSign.Outer].color;
             if (spriteRenderer[(int)WarningSign.Outer])
             {
                 SetWarningSign(true);    // 워닝 사인 on off
@@ -57,7 +56,7 @@ namespace A
                 warnTr.localScale = new Vector3(lerpScale, 1f, 1f);
 
                 t += Time.deltaTime;
-                Debug.Log("붉은화면 Logging Cancel 가능!");
+                //Debug.Log("붉은화면 Logging Cancel 가능!");
                 await UniTask.Yield(ct);
             }
 

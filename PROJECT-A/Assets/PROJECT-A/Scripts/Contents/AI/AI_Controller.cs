@@ -23,10 +23,7 @@ namespace A
             AttackState attackState = new AttackState(monsterBase);
             DeadState deadState = new DeadState(monsterBase);
             IdleState idleState = new IdleState(monsterBase);
-            //AttackState attackState = new AttackState(monsterBase);
-            //AttackState attackState = new AttackState(monsterBase);
-            //AttackState attackState = new AttackState(monsterBase);
-
+     
             aiStates[(int)EAIStateId.Attack] = attackState;
             aiStates[(int)EAIStateId.Dead] = deadState;
             aiStates[(int)EAIStateId.Idle] = idleState;
@@ -68,8 +65,33 @@ namespace A
 
         private void SearchTarget()
         {
+            var pos = monsterBase.monsterContext.RigidBody2D.position;
             int count = Physics2D.OverlapCircleNonAlloc(monsterBase.monsterContext.RigidBody2D.position, monsterBase.monsterContext.Config.DetectRange, hits);
-            monsterBase.Target = count > 0 ? hits[0].gameObject : null;
+
+            float bestSqr = float.PositiveInfinity;
+            GameObject best = null;
+
+            for (int i = 0; i < count; i++)
+            {
+                var col = hits[i];
+                if (!col) 
+                    continue;
+                // 자기 자신 제외(필요 시)
+                if (col.attachedRigidbody == monsterBase.monsterContext.RigidBody2D) 
+                    continue;
+
+                // 콜라이더 가장 가까운 점 기준 거리(큰 콜라이더에도 안전)
+                Vector2 p = col.ClosestPoint(pos);
+                float d2 = (p - pos).sqrMagnitude;
+
+                if (d2 < bestSqr)
+                {
+                    bestSqr = d2;
+                    best = col.gameObject;
+                }
+            }
+
+            monsterBase.Target = best;
         }
     }
 }
