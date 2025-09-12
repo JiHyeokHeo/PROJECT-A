@@ -18,7 +18,7 @@ namespace A
             state.Event += OnSpineEvent;
         }
 
-        public void PlayLoop(AnimationReferenceAsset clip, float mix = 0.1f)
+        public void PlayLoop(AnimationReferenceAsset clip, float mix = 0.0f)
         {
             if (clip == null)
                 return;
@@ -26,14 +26,14 @@ namespace A
             state.SetAnimation(0, clip, true).MixDuration = mix;
         }
 
-        public TrackEntry PlayOnce(AnimationReferenceAsset clip, float mix = 0.1f)
+        public TrackEntry PlayOnce(AnimationReferenceAsset clip, float mix = 0.0f)
         {
             if (clip == null)
                 return null;
 
             var trackentry = state.SetAnimation(0, clip, false);
             trackentry.MixDuration = mix;
-
+            
             return trackentry;
         }
 

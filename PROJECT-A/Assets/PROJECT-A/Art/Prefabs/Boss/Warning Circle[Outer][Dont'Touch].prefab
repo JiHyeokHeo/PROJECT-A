@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6809721042732499674}
@@ -70,8 +70,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1734022763
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 0.83137256}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6809721042732499674}
   - component: {fileID: 5973886029491546779}
-  - component: {fileID: -5968879347290744395}
+  - component: {fileID: 6427054394684377261}
   m_Layer: 0
   m_Name: Warning Circle[Outer][Dont'Touch]
   m_TagString: Untagged
@@ -156,8 +156,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1734022763
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 0.40392157}
@@ -170,7 +170,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-5968879347290744395
+--- !u!114 &6427054394684377261
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,8 +179,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1735921872507031323}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c884f40fd4ca8b04094c27a1ca8a4f27, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b41af52f5c8ba147ba61fdbce5e65d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inner: {fileID: 0}
-  outer: {fileID: 0}
+  inner: {fileID: 6137226831614886087}
+  outer: {fileID: 6809721042732499674}
+  offSet: {x: 0, y: 0}

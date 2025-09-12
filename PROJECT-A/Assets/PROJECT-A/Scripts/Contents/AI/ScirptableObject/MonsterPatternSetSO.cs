@@ -4,7 +4,7 @@ using UnityEngine;
 public enum EPatternID
 {
     Rush,
-
+    Smash,
     None,
 }
 
@@ -22,6 +22,7 @@ namespace A
         public int monsterID;
         public EPatternID PatternID; // 추후 뭐 인트로 바꿉시다
         public float CoolDown;
+        public float AttackRange;
         [Range(0, 1)] public float Weight = 0.3f; // 가중도 
     }
 }

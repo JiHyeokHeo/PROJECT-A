@@ -58,8 +58,9 @@ namespace A
             if (pick == null)
                 return;
 
-            await pick.Execute(ct);
-            pick.ResetCooldown(Time.time);
+            // 성공적으로 리턴을 했을 때에만 스킬 쿨 초기화
+            if (await pick.Execute(ct))
+                pick.ResetCooldown(Time.time);
         }
 
         MonsterPattern Pick()

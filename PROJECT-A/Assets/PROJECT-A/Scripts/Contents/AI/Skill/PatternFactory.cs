@@ -26,9 +26,12 @@ public class PatternFactory
         switch (patternId)
         {
             case EPatternID.Rush:
-            pattern = new CopyBara_Rush();
+                pattern = new CopyBara_Rush();
             break;
-        default:
+            case EPatternID.Smash:
+                pattern = new CopyBara_Smash();
+                break;
+            default:
             throw new ArgumentOutOfRangeException(nameof(patternId), patternId, null);
         }
 

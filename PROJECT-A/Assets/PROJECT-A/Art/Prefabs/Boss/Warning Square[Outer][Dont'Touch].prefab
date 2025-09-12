@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6809721042732499674}
-  - component: {fileID: 1754347534844969760}
+  - component: {fileID: 5529775117798034924}
   m_Layer: 0
   m_Name: Warning Square[Outer][Dont'Touch]
   m_TagString: Untagged
@@ -66,7 +66,7 @@ Transform:
   - {fileID: 6137226831614886087}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1754347534844969760
+--- !u!114 &5529775117798034924
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,12 +75,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1735921872507031323}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c884f40fd4ca8b04094c27a1ca8a4f27, type: 3}
+  m_Script: {fileID: 11500000, guid: 14aa3b170e527a94b8456c42248f9ad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inner: {fileID: 6137226831614886087}
   outer: {fileID: 6809721042732499674}
-  offSet: {x: 0, y: 0}
+  offSet: {x: 0, y: 0.15}
 --- !u!1 &6555495985732330638
 GameObject:
   m_ObjectHideFlags: 0

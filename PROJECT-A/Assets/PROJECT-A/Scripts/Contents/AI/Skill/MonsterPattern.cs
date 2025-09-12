@@ -16,6 +16,7 @@ namespace A
         protected MonsterContext context;
         protected float cooldown;
         protected float castingTime;
+        protected float attackRange;
         public float weight;
         protected float nextExecuteTime;
 
@@ -32,6 +33,6 @@ namespace A
         //pattern.Init(context, definition.CoolDown, definition.Weight);
         public abstract void Init(MonsterContext context, MonsterPatternSetSO data);
 
-        public abstract UniTask Execute(CancellationToken ct);
+        public abstract UniTask<bool> Execute(CancellationToken ct);
     }
 }
