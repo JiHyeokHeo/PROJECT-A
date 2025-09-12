@@ -8,10 +8,12 @@ namespace A
     {
         public Transform inner;
         public Transform outer;
+        public Vector2 offSet;
 
         // Start is called before the first frame update
         void Start()
         {
+            transform.localPosition = offSet;
             ResetData();
         }
 

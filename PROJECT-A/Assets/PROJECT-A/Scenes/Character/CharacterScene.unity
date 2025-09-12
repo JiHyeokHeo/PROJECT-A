@@ -130,25 +130,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 256632919604918800, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 256632919604918800, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 260038003172640519, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1602023170019074075, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_Name
-      value: Warning Square[Outer][Don'tTouch]
-      objectReference: {fileID: 0}
-    - target: {fileID: 1602023170019074075, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2643896129672116332, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -193,22 +177,6 @@ PrefabInstance:
     - target: {fileID: 3139309546424423041, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
       propertyPath: m_Name
       value: Coppybara
-      objectReference: {fileID: 0}
-    - target: {fileID: 3139309546424423041, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4973902264165008791, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5813092817238535642, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5813092817238535642, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
