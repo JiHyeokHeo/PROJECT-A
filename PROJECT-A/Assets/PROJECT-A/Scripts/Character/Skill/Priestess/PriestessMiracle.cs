@@ -10,11 +10,13 @@ public class PriestessMiracle : SkillBase
 
     [SerializeField] float invulnDuration = 5f;
     [SerializeField] float atkBoostPercent = 0.5f;
+    [SerializeField]
+    float coolDown = 60f;
 
     public override KeyCode HotKey => KeyCode.R;
     public override ActionNumber ActionNumber => ActionNumber.SkillR;
     public override SkillTargetType Type => SkillTargetType.None;
-    public override float CoolDown => 60f;
+    public override float CoolDown => coolDown;
     public override float Range => searchRadius;
     public override float ActionTime => 0.4f;
 

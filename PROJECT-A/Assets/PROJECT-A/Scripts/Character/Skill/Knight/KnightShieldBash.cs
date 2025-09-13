@@ -2,8 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Skills/Knight/knightE" +
-    "")]
+[CreateAssetMenu(menuName = "Skills/Knight/knightE")]
 public class KnightShieldBash : SkillBase
 {
     [SerializeField]
@@ -15,9 +14,11 @@ public class KnightShieldBash : SkillBase
     [SerializeField]
     float hitRadius = 0.5f;
     [SerializeField]
-    LayerMask enemyMask = LayerMask.GetMask("Enemy");
+    LayerMask enemyMask;
     [SerializeField]
     bool stopOnFirstHit = true;
+    [SerializeField]
+    private float coolDown = 3f;
 
     [SerializeField]
     float slamHold = 0.6f;
@@ -25,7 +26,7 @@ public class KnightShieldBash : SkillBase
     public override ActionNumber ActionNumber => ActionNumber.SkillE;
     public override SkillTargetType Type => SkillTargetType.Point;
 
-    public override float CoolDown => 3f;
+    public override float CoolDown => coolDown;
     public override float Range => dashDistance;
     public override float ActionTime => slamHold + Mathf.Max(0.05f, dashDistance / Mathf.Max(0.01f, dashSpeed)) + 0.1f;
     

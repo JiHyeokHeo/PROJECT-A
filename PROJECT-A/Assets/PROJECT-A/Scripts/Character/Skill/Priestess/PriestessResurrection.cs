@@ -39,7 +39,8 @@ public class PriestessResurrection : SkillBase
             preDelay,
             searchRadius, allyMask, Mathf.Clamp01(reviveHPPercent),
             tauntRadius, enemyMask);
-       
+        MarkCast();
+
     }
 
 }

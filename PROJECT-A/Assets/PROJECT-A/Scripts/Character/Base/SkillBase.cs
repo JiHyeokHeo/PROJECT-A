@@ -38,6 +38,6 @@ public abstract class SkillBase : ScriptableObject, ISkill
 
     protected void MarkCast()
     {
-        lastCastTime= Time.time;
+        lastCastTime = Time.time;
     }
 }

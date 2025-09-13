@@ -12,6 +12,8 @@ public class KnightProtector : SkillBase
     public override float ActionTime => 0.35f;
     public override float Range => 4f;
 
+    [SerializeField]
+    private float coolDown = 30f;
     [SerializeField] float duration = 10f;
     [SerializeField] float resist = 20f;
     public override void Cast(ICharacter caster, Vector2 point, ISelectable target)

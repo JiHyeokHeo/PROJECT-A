@@ -16,11 +16,13 @@ public class PriestessPray : SkillBase
     float tickInterval = 1f;
     [SerializeField]
     float percentPerTick = 0.04f;
+    [SerializeField]
+    private float coolDown = 10f;
 
     public override KeyCode HotKey => KeyCode.E;
     public override ActionNumber ActionNumber => ActionNumber.SkillE;
     public override SkillTargetType Type => SkillTargetType.None;
-    public override float CoolDown => 5f;
+    public override float CoolDown => coolDown;
     public override float Range => searchRadius;
     public override float ActionTime => 0.3f;
 
@@ -32,5 +34,6 @@ public class PriestessPray : SkillBase
         var runner = go.GetComponent<PrayRunner>();
         if (!runner)
             runner = go.AddComponent<PrayRunner>();
+        MarkCast();
     }
 }
