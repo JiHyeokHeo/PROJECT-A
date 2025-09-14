@@ -38,12 +38,12 @@ namespace A
          
         public override void Tick(float dt)
         {
-            Physics2D.OverlapCircleNonAlloc(monster.monsterContext.RigidBody2D.position, monster.monsterConfig.AttackRange, overlappedObjects);
+            //Physics2D.OverlapCircleNonAlloc(monster.monsterContext.RigidBody2D.position, monster.monsterConfig.AttackRange, overlappedObjects);
 
-            if (overlappedObjects.Length > 0) 
-            {
-                monster.monsterContext.Target = overlappedObjects[0].transform;
-            }
+            //if (overlappedObjects.Length > 0) 
+            //{
+            //    monster.monsterContext.Target = overlappedObjects[0].transform;
+            //}
         }
 
         // 공격 패턴 지속

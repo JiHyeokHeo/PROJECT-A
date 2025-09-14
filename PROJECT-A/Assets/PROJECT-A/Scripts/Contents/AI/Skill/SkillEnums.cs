@@ -7,6 +7,9 @@ namespace A
         Rush,
         RushReady,
         RushDone,
+        Smash,
+        SmashReady,
+        SmashDone,
         MeleeAttack,
     }
 

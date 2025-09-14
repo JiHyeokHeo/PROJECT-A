@@ -19,6 +19,7 @@ public class Spawner : MonoBehaviour
         //    var p = start + new Vector2(i % 2, i / 2);
         //    Instantiate(CharacterPrefab, p, Quaternion.identity);
         //}
-        Instantiate(bossPrefab, new Vector2(4, 2), Quaternion.identity);
+        var t = Instantiate(bossPrefab, new Vector2(4, 2), Quaternion.identity);
+        t.SetActive(true);
     }
 }

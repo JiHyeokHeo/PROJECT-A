@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector.Editor.TypeSearch;
 using System;
+using TST;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -50,8 +51,8 @@ namespace A
         }
         public float hp;
 
-        public event Action<float, Vector2> OnDamagedEvent;
-        public event Action OnDeadEvent;
+        //public event Action<float, Vector2> OnDamagedEvent;
+        //public event Action OnDeadEvent;
 
         float facingSing = 1; // 왼쪽 1 오른쪽 -1
         #endregion
@@ -59,7 +60,7 @@ namespace A
         public PatternScheduler patternScheduler;
 
         // TODO : 추후 클래스 분할 필요
-        public GameObject[] warningSign = new GameObject[2];
+        public SerializableWrapDictionary<string, MonsterWarningSign> warningSign = new SerializableWrapDictionary<string, MonsterWarningSign>();
 
         public void ApplyDamage(float damage)
         {
@@ -106,10 +107,10 @@ namespace A
             }
         }
 
-        void OnDamaged(float dmg, Vector2 hitDir)
-        {
-            // 데미지를 준 주체자를 찾는 방식이 좋을까 
-        }
+        //void OnDamaged(float dmg, Vector2 hitDir)
+        //{
+        //    // 데미지를 준 주체자를 찾는 방식이 좋을까 
+        //}
         
         void OnDead()
         {
