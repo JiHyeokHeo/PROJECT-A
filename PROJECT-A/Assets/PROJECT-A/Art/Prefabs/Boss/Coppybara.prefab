@@ -18,13 +18,13 @@ GameObject:
   - component: {fileID: 373750400776153531}
   - component: {fileID: 3597760240590315665}
   - component: {fileID: 2014404178891370815}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Coppybara
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2643896129672116332
 Transform:
   m_ObjectHideFlags: 0
@@ -266,9 +266,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Adjustable Circle
       objectReference: {fileID: 0}
+    - target: {fileID: 53273809272975645, guid: 8aa3f58907556054c98fe021557ff09f, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1735921872507031323, guid: 8aa3f58907556054c98fe021557ff09f, type: 3}
       propertyPath: m_Name
       value: Warning Circle[Outer][Dont'Touch]
+      objectReference: {fileID: 0}
+    - target: {fileID: 1735921872507031323, guid: 8aa3f58907556054c98fe021557ff09f, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1735921872507031323, guid: 8aa3f58907556054c98fe021557ff09f, type: 3}
       propertyPath: m_IsActive
@@ -347,13 +355,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2643896129672116332}
     m_Modifications:
+    - target: {fileID: 53273809272975645, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1735921872507031323, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
       propertyPath: m_Name
       value: Warning Square[Outer][Dont'Touch]
       objectReference: {fileID: 0}
     - target: {fileID: 1735921872507031323, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1735921872507031323, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555495985732330638, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6809721042732499674, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -394,6 +414,10 @@ PrefabInstance:
     - target: {fileID: 6809721042732499674, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6930987037858505419, guid: 0502f73645db98b4f88ac31f8baf6df2, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

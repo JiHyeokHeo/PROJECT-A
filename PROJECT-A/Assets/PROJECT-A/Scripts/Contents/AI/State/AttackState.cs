@@ -29,8 +29,7 @@ namespace A
         public override void Exit()
         {
             // 혹시 모르니 나갈때도 캔슬
-            monster.monsterContext.CancellationToken?.Cancel();
-            monster.monsterContext.CancellationToken?.Dispose();
+            monster.monsterContext.ResetToken();
         }   
 
 

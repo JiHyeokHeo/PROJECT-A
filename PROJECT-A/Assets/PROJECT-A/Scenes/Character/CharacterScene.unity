@@ -178,6 +178,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coppybara
       objectReference: {fileID: 0}
+    - target: {fileID: 3139309546424423041, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -306,7 +310,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &420098501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,7 +486,7 @@ MonoBehaviour:
   CharacterPrefab: {fileID: 247116756035380177, guid: 51aa9db06b9f4d94ead4e19d887f923b, type: 3}
   CharacterPrefab2: {fileID: 5536369444472697511, guid: 27ff6d1801cfeba4e8b809037a543b86, type: 3}
   CharacterPrefab3: {fileID: 6565429106844242214, guid: 76642e84228ed424d87936672de6c9e5, type: 3}
-  bossPrefab: {fileID: 247116756035380177, guid: bc2ec1ff57cf7004e8c5135a153c1444, type: 3}
+  bossPrefab: {fileID: 3139309546424423041, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
 --- !u!4 &645820653
 Transform:
   m_ObjectHideFlags: 0
