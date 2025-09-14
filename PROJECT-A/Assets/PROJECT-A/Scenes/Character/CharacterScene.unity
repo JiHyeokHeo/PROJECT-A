@@ -139,6 +139,22 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 373750400776153531, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
+      propertyPath: loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 373750400776153531, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
+      propertyPath: timeScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 373750400776153531, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
+      propertyPath: unscaledTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 373750400776153531, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
+      propertyPath: _animationName
+      value: Copybara_Smash
+      objectReference: {fileID: 0}
     - target: {fileID: 487285546647337612, guid: 4a79430095e41c14a925963c40b1046d, type: 3}
       propertyPath: offSet.y
       value: 0.15
