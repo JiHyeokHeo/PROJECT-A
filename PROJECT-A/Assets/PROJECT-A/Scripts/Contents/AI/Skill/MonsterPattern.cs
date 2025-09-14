@@ -19,6 +19,7 @@ namespace A
         protected float attackRange;
         public float weight;
 
+        public int coolDownGroupId;
         protected CooldownGroup cooldownGroup;
 
         private int consecutiveUses = 0;
@@ -26,9 +27,10 @@ namespace A
         private bool isLocked = false;
         private int maxConsecutiveUses = 2;
 
-        public void SetCooldownGroup(CooldownGroup group)
+        public void SetCooldownGroup(CooldownGroup group, int groupId = 0) // 0번은 그룹 없는 버전
         {
             cooldownGroup = group;
+            coolDownGroupId = groupId;
         }
 
         public bool IsReadyToExecute(float now)
