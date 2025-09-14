@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace A.Pop
+namespace A.Tory
 {
     public interface ISelectable 
     {

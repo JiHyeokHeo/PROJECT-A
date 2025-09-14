@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace A
@@ -19,6 +16,6 @@ namespace A
         public float ChaseStopRange;
 
         // 몬스터 패턴
-        public PatternSetSO PatternSO;
+        public MonsterPatternSetSO[] PatternSO;
     }
 }

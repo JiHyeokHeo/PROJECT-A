@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
@@ -12,12 +10,19 @@ namespace A
         public Rigidbody2D RigidBody2D;
         public SpineAnimationDriver AnimationDriver;
         //public EventHandler EventHandler; // 실시간 체력 처리를 여기서 할까..........???????????????????
-        public MonsterConfigSO MonsterConfig;
-        public Rigidbody2D Target; // 플레이어
-
+        public MonsterConfigSO Config;
+        public Transform Target; // 플레이어
+        public float idleTime;
         public CancellationTokenSource CancellationToken = new CancellationTokenSource(); // 패턴 취소
 
-        public float SqrAttackRange => MonsterConfig.AttackRange * MonsterConfig.AttackRange;
-        public float SqrChaseStopRange => MonsterConfig.ChaseStopRange * MonsterConfig.ChaseStopRange;
+        public void ResetToken()
+        {
+            CancellationToken.Cancel();
+            CancellationToken.Dispose();
+            CancellationToken = new CancellationTokenSource();
+        }
+
+        public float SqrAttackRange => Config.AttackRange * Config.AttackRange;
+        public float SqrChaseStopRange => Config.ChaseStopRange * Config.ChaseStopRange;
     }
 }

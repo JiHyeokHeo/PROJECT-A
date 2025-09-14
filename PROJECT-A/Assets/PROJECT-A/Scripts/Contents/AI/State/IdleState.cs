@@ -1,8 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace A
 {
     public class IdleState : AIState
@@ -13,6 +8,14 @@ namespace A
         }
 
         public override EAIStateId aiStateId => EAIStateId.Idle;
+
+        public override EAIStateId CheckTransition()
+        {
+            if (FindTarget())
+                return EAIStateId.Attack;
+
+            return EAIStateId.None;
+        }
 
         public override void Enter()
         {
@@ -25,10 +28,16 @@ namespace A
 
         public override void Tick(float dt)
         {
-            // 특정 구간에 들어가면 State 변경
             
+        }
+
+        private bool FindTarget()
+        {
+            if (monster.Target == null)
+                return false;
 
 
+            return true;
         }
     }
 }

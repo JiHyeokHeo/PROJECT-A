@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace A
 {
     public enum EAIStateId { None, Idle, Patrol, Chase, Attack, Groggy, Dead }
 
-    [Serializable]
     public abstract class AIState 
     {
         public AIState(MonsterBase monster) : base()
@@ -19,5 +15,7 @@ namespace A
         public abstract void Enter();
         public abstract void Tick(float dt);
         public abstract void Exit();
+        public abstract EAIStateId CheckTransition();
+            
     }
 }

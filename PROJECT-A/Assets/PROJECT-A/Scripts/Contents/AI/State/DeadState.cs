@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 namespace A
 {
@@ -12,6 +10,11 @@ namespace A
         }
 
         public override EAIStateId aiStateId => EAIStateId.Dead;
+
+        public override EAIStateId CheckTransition()
+        {
+            return EAIStateId.None;
+        }
 
         public override void Enter()
         {

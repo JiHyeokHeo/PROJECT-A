@@ -1,9 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,46 +11,46 @@ namespace A
     public class PatternScheduler
     {
         MonsterContext monsterContext;
-        float total;
-        WeightedPattern[] patternWeights; // 패턴 가중치
-        List<WeightedPattern> usablePatterns = new List<WeightedPattern>();
+        float total; // 가중치
+        List<MonsterPattern> patterns = new List<MonsterPattern>();
+        List<MonsterPattern> usablePatterns = new List<MonsterPattern>();
 
+        
         public void SetUp(MonsterContext monsterContext)
         {
             this.monsterContext = monsterContext;
+            var patternArr = monsterContext.Config.PatternSO;
+            for (int i = 0; i < monsterContext.Config.PatternSO.Length; i++)
+            {
+                var pattern = PatternFactory.Create(patternArr[i]);
+                pattern.Init(monsterContext, patternArr[i]);
+                patterns.Add(pattern);
+            }
             BuildFromConfig();
         }
 
         void BuildFromConfig()
         {
-            var set = monsterContext?.MonsterConfig.PatternSO;
-            patternWeights = set?.Patterns;
+            var set = monsterContext?.Config.PatternSO;
 
-            if (patternWeights == null || patternWeights.Length == 0 ) 
+            if (monsterContext.Config.PatternSO.Length == 0 ) 
             {
                 total = 0;
                 return;
             }
-
-            for (int i = 0; i < patternWeights.Length; i++)
-            {
-                patternWeights[i].Pattern.OnSetup(monsterContext);
-                
-            }
-            total = patternWeights.Sum(index => Mathf.Max(0.001f, index.Weight));
+            
+            total = monsterContext.Config.PatternSO.Sum(index => Mathf.Max(0.001f, index.Weight));
         }
 
         public async UniTask ExecuteNext(CancellationToken ct)
         {
-            if (patternWeights == null || patternWeights.Length == 0)
-                return;
-
             usablePatterns.Clear();
-            for (int i = 0; i < patternWeights.Length; i++)
+            for (int i = 0; i < patterns.Count; i++)
             {
-                if (patternWeights[i].Pattern.IsReady(Time.time))
+                // 첫번째 쿨 확인
+                if (patterns[i].IsReadyToExecute(Time.time))
                 {
-                    usablePatterns.Add(patternWeights[i]);
+                    usablePatterns.Add(patterns[i]);
                 }
             }
 
@@ -60,20 +58,17 @@ namespace A
             if (pick == null)
                 return;
 
-            await pick.Pattern.Execute(ct);
-            pick.Pattern.ResetCooldown(Time.time);
-            //var cd = Mathf.Max(0f, pick.Pattern.Cooldown);
-            //if (cd > 0f)
-            //    await UniTask.Delay(TimeSpan.FromSeconds(cd), cancellationToken : ct);
+            await pick.Execute(ct);
+            pick.ResetCooldown(Time.time);
         }
 
-        WeightedPattern Pick()
+        MonsterPattern Pick()
         {
             float r = UnityEngine.Random.value * total; 
             float acc = 0f; 
             foreach (var w in usablePatterns)
             { 
-                acc += Mathf.Max(0.0001f, w.Weight); 
+                acc += Mathf.Max(0.0001f, w.weight); 
                 if (r <= acc) 
                     return w; 
             }

@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace A
 {
     public enum ECopyBaraAttackPattern
     {
         None,
+        Run,
         Rush,
         RushReady,
         RushDone,
