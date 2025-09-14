@@ -31,6 +31,9 @@ public class PatternFactory
             case EPatternID.Smash:
                 pattern = new CopyBara_Smash();
                 break;
+            case EPatternID.ColdBeam:
+                pattern = new CopyBara_ColdBeam();
+                break;
             default:
             throw new ArgumentOutOfRangeException(nameof(patternId), patternId, null);
         }

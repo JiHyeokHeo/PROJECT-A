@@ -76,9 +76,7 @@ namespace A
 
         public override void Init(MonsterContext context, MonsterPatternSetSO data)
         {
-            this.context = context;
-            weight = data.Weight;
-            attackRange = data.AttackRange;
+            base.Init(context, data);
             castingTime = 3.0f;
         }
 

@@ -15,6 +15,7 @@ namespace A
         [SerializeReference] public AIState[] aiStates;
 
         Collider2D[] hits = new Collider2D[4];
+        public LayerMask layerMask;
         private void Awake()
         {
             aiStates = new AIState[7];
@@ -66,7 +67,7 @@ namespace A
         private void SearchTarget()
         {
             var pos = monsterBase.monsterContext.RigidBody2D.position;
-            int count = Physics2D.OverlapCircleNonAlloc(monsterBase.monsterContext.RigidBody2D.position, monsterBase.monsterContext.Config.DetectRange, hits);
+            int count = Physics2D.OverlapCircleNonAlloc(monsterBase.monsterContext.RigidBody2D.position, monsterBase.monsterContext.Config.DetectRange, hits, layerMask);
 
             float bestSqr = float.PositiveInfinity;
             GameObject best = null;

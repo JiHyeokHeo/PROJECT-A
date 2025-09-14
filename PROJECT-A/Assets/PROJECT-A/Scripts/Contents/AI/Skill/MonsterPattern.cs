@@ -22,6 +22,7 @@ namespace A
         protected CooldownGroup cooldownGroup;
 
         private int consecutiveUses = 0;
+        private bool isAvailableToLock = false;
         private bool isLocked = false;
         private int maxConsecutiveUses = 2;
 
@@ -32,7 +33,7 @@ namespace A
 
         public bool IsReadyToExecute(float now)
         {
-            if (isLocked)
+            if (isLocked && isAvailableToLock)
                 return false;
         ;
             return cooldownGroup?.IsReady(now) ?? true; // 널 병합 연산자
@@ -59,7 +60,15 @@ namespace A
         }
 
         //pattern.Init(context, definition.CoolDown, definition.Weight);
-        public abstract void Init(MonsterContext context, MonsterPatternSetSO data);
+        public virtual void Init(MonsterContext context, MonsterPatternSetSO data)
+        {
+            this.context = context;
+            weight = data.Weight;
+            attackRange = data.AttackRange;
+
+            if (data.CooldownGroupId > 0)
+                isAvailableToLock = true;
+        }
 
         public abstract UniTask<bool> Execute(CancellationToken ct);
     }
