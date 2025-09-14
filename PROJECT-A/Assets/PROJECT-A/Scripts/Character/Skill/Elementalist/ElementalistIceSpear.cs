@@ -1,5 +1,6 @@
 ﻿using Character;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -11,9 +12,9 @@ public class ElementalistIceSpear : SkillBase
     [SerializeField]
     LayerMask enemyMask;
     [SerializeField]
-    float preDelay = 0.12f;
+    float preDelay = 0.4f;
     [SerializeField]
-    float speed = 14f;
+    float speed = 7f;
     [SerializeField]
     float turnRate = 540f;
     [SerializeField]
@@ -47,11 +48,12 @@ public class ElementalistIceSpear : SkillBase
         var tgt = CombatSearch.NearestCharacter(point, searchRadius, enemyMask, _hits, filter: CombatSearch.Alive());
         if (tgt == null) { MarkCast(); return; }
 
-        bool empowered = ((Component)caster.Transform).GetComponent<ManaBurstBuff>()?.ConsumeIfArmed() == true;
-        var runner = ((Component)caster.Transform).GetComponent<IceSpearRunner>() ?? ((Component)caster.Transform).gameObject.AddComponent<IceSpearRunner>();
+        bool empowered = caster.Transform.GetComponent<ManaBurstBuff>()?.ConsumeIfArmed() == true;
+        var runner = caster.Transform.GetComponent<IceSpearRunner>();
+
+        if (!runner)
+            runner = caster.Transform.AddComponent<IceSpearRunner>();
         runner.Run(caster, tgt, preDelay, speed, turnRate, hitRadius, maxLifetime, damage, fanAngleDeg, projectileVisualPrefab, enemyMask, empowered);
         MarkCast();
-
-
     }
 }

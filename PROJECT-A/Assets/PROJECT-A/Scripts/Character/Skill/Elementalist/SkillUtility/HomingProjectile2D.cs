@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HomingProjectile2D : MonoBehaviour
 {
-    public float speed = 12f;
+    public float speed = 6f;
     public float turnRateDeg = 360f;
     public float maxLifetime = 5f;
 
@@ -33,7 +33,6 @@ public class HomingProjectile2D : MonoBehaviour
         this.maxLifetime = maxLifetime;
         this.hitMask = hitMask;
         dieAt = Time.time + maxLifetime;
-        Debug.Log($"{dieAt}은 dieAt입니다. {Time.time}은 time입니다.");
     }
 
     private void FixedUpdate()
@@ -43,7 +42,7 @@ public class HomingProjectile2D : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        // Health로 되어 있지만 추후에 지혁님 에너미로 바꿈
+  
         if (target != null && target.Health != null && !target.Health.IsDead)
         {
             Vector2 to = (Vector2)target.Transform.position - (Vector2)transform.position;

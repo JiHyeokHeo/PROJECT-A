@@ -1,9 +1,6 @@
-using Character;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace A
+namespace Character
 {
     public class SelectableCharacter : MonoBehaviour, ISelectable
     {

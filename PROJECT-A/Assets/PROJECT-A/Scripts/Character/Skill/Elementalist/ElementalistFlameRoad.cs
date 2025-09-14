@@ -12,7 +12,7 @@ public class ElementalistFlameRoad : SkillBase
     private LayerMask enemyMask;
 
     [SerializeField]
-    private float preDelay = 0.2f;
+    private float preDelay = 0.6f;
     [SerializeField]
     private float duration = 5f;
     [SerializeField]
