@@ -1,34 +1,40 @@
-using UnityEngine;
-using System;
+using Character;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Character
 {
-    [DefaultExecutionOrder(-50)]
-    public class CharacterBase : MonoBehaviour, ICharacter
+    [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
+    public abstract class CharacterBase : MonoBehaviour, ICharacter
     {
-        [SerializeField]
-        string id = Guid.NewGuid().ToString();
         public Transform Transform => transform;
         public IStats Stats { get; private set; }
         public IHealth Health { get; private set; }
+        public IMovable Movable { get; private set; }
         public IStateMachine StateMachine { get; private set; }
+        public ISkillSet SkillSet { get; private set; }
+        public CharacterCombat CharacterCombat { get; private set; }
 
-        readonly Dictionary<Type, object> capacity = new();
+        public RollAbility RollAbility { get; private set; }
+        public ActionLock Lock { get; private set; }
+        public CharacterAnimatorDriver Driver { get; private set; }
+
+        public SpineSideFlip2D SpineSideFlip { get; private set; }
        
+
         void Awake()
         {
             Stats = GetComponent<IStats>();
             Health = GetComponent<IHealth>();
+            Movable = GetComponent<IMovable>();
             StateMachine = GetComponent<IStateMachine>();
-
-            var monos = GetComponentsInChildren<MonoBehaviour>(true);
-            foreach (var mb in monos)
-            {
-                if (mb is not ICapacity)
-                    continue;
-
-            }
+            SkillSet = GetComponent<ISkillSet>();
+            CharacterCombat = GetComponent<CharacterCombat>();
+            Lock = GetComponent<ActionLock>();
+            RollAbility = GetComponent<RollAbility>();
+            Driver = GetComponent<CharacterAnimatorDriver>();
+            SpineSideFlip = GetComponent<SpineSideFlip2D>();
         }
 
         protected virtual void OnEnable()

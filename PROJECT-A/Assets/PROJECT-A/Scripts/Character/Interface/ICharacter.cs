@@ -7,20 +7,19 @@ namespace Character
 {
     public interface ICharacter
     {
-        string Id { get; }
-        Faction faction { get; }
-        Transform Transform { get; }
+        public Transform Transform { get; }
+        public IStats Stats { get; }
+        public IHealth Health { get; }
+        public IMovable Movable { get; }
+        public IStateMachine StateMachine { get;}
+        public ISkillSet SkillSet { get; }
 
-        IStats Stats { get; }
-        IHealth Health { get; }
-        IStateMachine StateMachine { get; }
-        T GetCapability<T>() where T : class;
-    }
+        public RollAbility RollAbility { get; }
+        public ActionLock Lock { get; }
 
-    public enum Faction
-    {
-        Player = 0,
-        Enmey = 1,
-        Neutral = 2,
+        public CharacterAnimatorDriver Driver { get; }
+        public CharacterCombat CharacterCombat { get; }
+
+        public SpineSideFlip2D SpineSideFlip { get; }
     }
 }
