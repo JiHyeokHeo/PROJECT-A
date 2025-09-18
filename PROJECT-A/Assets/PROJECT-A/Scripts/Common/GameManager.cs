@@ -1,5 +1,6 @@
 using A;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace TST
     public partial class GameManager : MonoBehaviour // 중계기 역할
     {
         public static GameManager Instance { get; private set; }
+        public event Action<MonsterBase, float, float> OnMonsterHpChanged;
 
         private void Awake()
         {
@@ -86,6 +88,11 @@ namespace TST
             // # Game Over UI를 띄운다 등등..
             // # Dungeon Reset
             // # ...
+        }
+
+        public void NotifyMonsterHpChanged(MonsterBase monster, float current, float maxHp)
+        {
+            OnMonsterHpChanged?.Invoke(monster, current, maxHp);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace A
         public float DetectRange;
         public float AttackRange;
         public float ChaseStopRange;
+        public bool isBoss;
 
         // 몬스터 패턴
         public MonsterPatternSetSO[] PatternSO;

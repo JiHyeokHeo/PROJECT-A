@@ -1,12 +1,19 @@
+using Character;
 using Sirenix.OdinInspector.Editor.TypeSearch;
 using System;
 using TST;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public interface IDamage
+{
+    public void ApplyDamage(float damage);
+    public bool IsDead { get; }
+}
+
 namespace A
 {
-    public class MonsterBase : MonoBehaviour
+    public class MonsterBase : MonoBehaviour, IDamage
     {
         public MonsterConfigSO monsterConfig;
         public SpineAnimationSetSO animationSetSO;
@@ -44,15 +51,12 @@ namespace A
             {
                 if (hp != value)
                     hp = value;
-
-                if (hp <= 0)
-                    OnDead();
             }
         }
-        public float hp;
 
-        //public event Action<float, Vector2> OnDamagedEvent;
-        //public event Action OnDeadEvent;
+        public bool IsDead { get; private set; }
+
+        public float hp;
 
         float facingSing = 1; // 왼쪽 1 오른쪽 -1
         #endregion
@@ -62,10 +66,7 @@ namespace A
         // TODO : 추후 클래스 분할 필요
         public SerializableWrapDictionary<string, MonsterWarningSign> warningSign = new SerializableWrapDictionary<string, MonsterWarningSign>();
 
-        public void ApplyDamage(float damage)
-        {
-            CombatSystem.Singleton.ApplyDamage(damage);
-        }
+ 
 
         public void SetInfo(int monsterId)
         {
@@ -88,6 +89,10 @@ namespace A
             patternScheduler.SetUp(monsterContext);
         }
 
+        private void Start()
+        {
+      
+        }
 
         void FixedUpdate()
         {
@@ -107,20 +112,19 @@ namespace A
             }
         }
 
-        //void OnDamaged(float dmg, Vector2 hitDir)
-        //{
-        //    // 데미지를 준 주체자를 찾는 방식이 좋을까 
-        //}
-        
-        void OnDead()
+        private void Dead()
         {
-            
-            
+   
         }
 
-        private void OnGUI()
+        public void ApplyDamage(float damage)
         {
-            
+            if (IsDead)
+                return;
+
+            CurrentHP -= damage;
+
+            GameManager.Instance.NotifyMonsterHpChanged(this, CurrentHP, monsterConfig.MaxHp);
         }
     }
 }
