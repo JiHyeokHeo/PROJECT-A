@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Character;
 using Spine.Unity;
-using UnityEngine.Rendering; // ActionLock
 
 [DisallowMultipleComponent]
 public class SpineSideFlip2D : MonoBehaviour
