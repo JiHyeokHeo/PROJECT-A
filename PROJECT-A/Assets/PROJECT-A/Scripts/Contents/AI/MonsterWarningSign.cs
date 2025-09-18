@@ -33,6 +33,6 @@ namespace A
             gameObject.SetActive(isActive);
         }
 
-        public abstract void SetData(MonsterContext context);
+        public abstract void SetData(MonsterContext context, MonsterPatternSetSO data);
     }
 }

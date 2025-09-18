@@ -6,7 +6,7 @@ namespace A
 {
     public class SquareWarningSign : MonsterWarningSign
     {
-        public override void SetData(MonsterContext context)
+        public override void SetData(MonsterContext context, MonsterPatternSetSO data)
         {
             Vector2 start = context.RigidBody2D.position;
             Vector2 end = context.Target.position;

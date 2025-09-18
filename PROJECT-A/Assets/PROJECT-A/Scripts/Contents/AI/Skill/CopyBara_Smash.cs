@@ -24,7 +24,7 @@ namespace A
             SetWarningSign(true);    // 워닝 사인 on off
 
             // 워닝 사인 데이터 Scale Rotation 변경
-            context.Owner.warningSign["Smash"].SetData(context);
+            context.Owner.warningSign["Smash"].SetData(context, patternSO);
 
             // TODO : 맞았을 때 Flinch 애니메이션 재생 및 Visual Scripting Add
             Transform warnTr = context.Owner.warningSign["Smash"].inner.transform;

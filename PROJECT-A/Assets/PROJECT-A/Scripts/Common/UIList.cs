@@ -7,7 +7,7 @@ namespace TST
     public enum UIList
     {
         UI_PANEL_START,
-
+        BossHpHud,
         Minimap_UI,
         CrossHair_UI,
         LoadingUI,

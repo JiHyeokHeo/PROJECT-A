@@ -15,6 +15,7 @@ namespace A
     {
         // TODO : 인터페이스를 통한 CoolDown Casting 더 분리 가능, 추후 필요하다면 분리
         protected MonsterContext context;
+        protected MonsterPatternSetSO patternSO;
         protected float castingTime;
         protected float attackRange;
         public float weight;
@@ -62,6 +63,7 @@ namespace A
         //pattern.Init(context, definition.CoolDown, definition.Weight);
         public virtual void Init(MonsterContext context, MonsterPatternSetSO data)
         {
+            patternSO = data;
             this.context = context;
             weight = data.Weight;
             attackRange = data.AttackRange;
