@@ -1,4 +1,4 @@
-name: PROEJECT-A
+name: PROJECT-A CI (Build + Discord)
 
 on:
   push:
@@ -7,6 +7,9 @@ on:
 
 env:
   PROJECT_PATH: PROJECT-A
+  TARGET_PLATFORM: StandaloneWindows64
+  BUILD_ROOT: build
+  BUILD_NAME: StandaloneWindows64
 
 jobs:
   build:
@@ -20,36 +23,37 @@ jobs:
           lfs: true
           fetch-depth: 0
 
-      # 워킹 디렉토리 깨끗하게 만들기 (checkout 직후 바로!)
+      # 1) 워킹 디렉토리 정리 (dirty 방지)
       - name: Clean working dir
         run: |
+          set -euxo pipefail
           git reset --hard
           git clean -fdx
+          git status
 
-      # (디버그) 폴더 확인
-      - name: Show tree
+      # 2) 디스크 정리 (용량 확보, 옵션)
+      - name: Free up disk space
         run: |
-          pwd
-          ls -la
-          ls -la "$PROJECT_PATH"
-          ls -la "$PROJECT_PATH/ProjectSettings"
+          set -euxo pipefail
+          echo "Before cleanup:" && df -h
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/share/boost || true
+          sudo rm -rf /opt/hostedtoolcache || true
+          docker system prune -af || true
+          docker volume prune -f || true
+          echo "After cleanup:" && df -h
 
-      # 1) Cache (서브폴더 기준으로 교체)
-      - name: Cache Library
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.PROJECT_PATH }}/Library
-          key: >
-            Library-${{ runner.os }}-
-            ${{ hashFiles(format('{0}/Assets/**', env.PROJECT_PATH)) }}-
-            ${{ hashFiles(format('{0}/Packages/**', env.PROJECT_PATH)) }}-
-            ${{ hashFiles(format('{0}/ProjectSettings/**', env.PROJECT_PATH)) }}
-          restore-keys: |
-            Library-${{ runner.os }}-
+      # 3) (옵션) 테스트
+      #- name: Run tests
+      #  uses: game-ci/unity-test-runner@v4
+      #  env:
+      #    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      #    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      #    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #  with:
+      #    projectPath: ${{ env.PROJECT_PATH }}
+      #    unityVersion: 2022.3.62f1
 
-
-
-      # 3) Build
+      # 4) 빌드
       - name: Build project
         uses: game-ci/unity-builder@v4
         env:
@@ -58,31 +62,75 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           projectPath: ${{ env.PROJECT_PATH }}
-          targetPlatform: StandaloneWindows64
-          unityVersion: 6000.0.49f1
-          versioning: Semantic   # 필요없으면 None 으로 바꾸기
+          targetPlatform: ${{ env.TARGET_PLATFORM }}
+          buildsPath: ${{ env.BUILD_ROOT }}
+          buildName: ${{ env.BUILD_NAME }}
+          unityVersion: 2022.3.62f1
+          versioning: None
 
-      # 4) Upload artifact
-      - name: Upload build
+      # 5) zip 패키징
+      - name: Package build as zip
+        if: success()
+        id: pkg
+        run: |
+          set -euxo pipefail
+          OUT_DIR="${BUILD_ROOT}/${TARGET_PLATFORM}"
+          ZIP_NAME="PROJECT-A_${{ github.ref_name }}_${{ github.run_number }}.zip"
+          mkdir -p "${BUILD_ROOT}/zips"
+          cd "${OUT_DIR}"
+          zip -r "../zips/${ZIP_NAME}" .
+          echo "zip_name=${ZIP_NAME}" >> "$GITHUB_OUTPUT"
+
+      # 6) 아티팩트 업로드 (zip만)
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Build-${{ github.sha }}
-          path: build
+          name: Build-${{ github.ref_name }}-${{ github.run_number }}
+          path: ${{ env.BUILD_ROOT }}/zips/${{ steps.pkg.outputs.zip_name }}
 
-      # 5) Send Discord Notification
-      - name: Discord notification
-        if: always()  
+      # 7) Discord 알림
+      - name: Notify Discord
+        if: always()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          STATUS="✅ Build succeeded"
-          if [ "${{ job.status }}" != "success" ]; then
-            STATUS="❌ Build failed"
+          if [[ -z "${DISCORD_WEBHOOK_URL:-}" ]]; then
+            echo "No webhook, skip"
+            exit 0
           fi
 
-          PAYLOAD="{
-            \"username\": \"Unity CI\",
-            \"content\": \"${STATUS}\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nWorkflow: ${{ github.workflow }}\"
-          }"
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          ARTIFACT_URL="${RUN_URL}#artifacts"
 
-          curl -H "Content-Type: application/json" \
-               -d "$PAYLOAD" \
-               ${{ secrets.DISCORD_WEBHOOK }}
+          STATUS="❌ Build Failed"
+          COLOR=16711680
+          if [ "${{ job.status }}" = "success" ]; then
+            STATUS="✅ Build Succeeded"
+            COLOR=65280
+          fi
+
+          PAYLOAD="$(cat <<JSON
+          {
+            "username": "Unity CI",
+            "embeds": [
+              {
+                "title": "$STATUS",
+                "description": "프로젝트 **${{ github.repository }}**",
+                "color": $COLOR,
+                "fields": [
+                  { "name": "Branch", "value": "${{ github.ref_name }}", "inline": true },
+                  { "name": "Run #", "value": "${{ github.run_number }}", "inline": true }
+                ]
+              }
+            ],
+            "components": [
+              { "type": 1, "components": [
+                { "type": 2, "style": 5, "label": "다운로드 (zip)", "url": "$ARTIFACT_URL" },
+                { "type": 2, "style": 5, "label": "로그 확인", "url": "$RUN_URL" }
+              ] }
+            ]
+          }
+          JSON
+          )"
+
+          curl -fsS -H "Content-Type: application/json" -d "$PAYLOAD" "$DISCORD_WEBHOOK_URL" || true
