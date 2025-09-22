@@ -68,7 +68,7 @@ jobs:
           unityVersion: 2022.3.62f1
           versioning: None
 
-      # 5) zip 패키징
+      # 5) zip 패키징 (루트에 저장)
       - name: Package build as zip
         if: success()
         id: pkg
@@ -76,9 +76,7 @@ jobs:
           set -euxo pipefail
           OUT_DIR="${BUILD_ROOT}/${TARGET_PLATFORM}"
           ZIP_NAME="PROJECT-A_${{ github.ref_name }}_${{ github.run_number }}.zip"
-          mkdir -p "${BUILD_ROOT}/zips"
-          cd "${OUT_DIR}"
-          zip -r "../zips/${ZIP_NAME}" .
+          zip -r "$ZIP_NAME" "$OUT_DIR"
           echo "zip_name=${ZIP_NAME}" >> "$GITHUB_OUTPUT"
 
       # 6) 아티팩트 업로드 (zip만)
@@ -86,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Build-${{ github.ref_name }}-${{ github.run_number }}
-          path: ${{ env.BUILD_ROOT }}/zips/${{ steps.pkg.outputs.zip_name }}
+          path: ${{ steps.pkg.outputs.zip_name }}
 
       # 7) Discord 알림
       - name: Notify Discord
