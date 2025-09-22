@@ -92,43 +92,64 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
+          set -euo pipefail
+
           if [[ -z "${DISCORD_WEBHOOK_URL:-}" ]]; then
             echo "No webhook, skip"
             exit 0
           fi
 
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          SERVER_URL="${{ github.server_url }}"
+          REPO="${{ github.repository }}"
+          RUN_ID="${{ github.run_id }}"
+          REF_NAME="${{ github.ref_name }}"
+          RUN_NUM="${{ github.run_number }}"
+
+          RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
+          # 체크 화면에 포커스된 실행(빌드) 페이지
+          SUCCESS_URL="$RUN_URL?check_suite_focus=true"
+          # 아티팩트 탭으로 이동
           ARTIFACT_URL="${RUN_URL}#artifacts"
 
           STATUS="❌ Build Failed"
           COLOR=16711680
+          # 기본 버튼(항상 노출)
+          BUTTONS='
+            { "type": 2, "style": 5, "label": "로그 확인", "url": "'"$RUN_URL"'" }
+          '
+
           if [ "${{ job.status }}" = "success" ]; then
             STATUS="✅ Build Succeeded"
             COLOR=65280
+            # 성공 시에만 “성공한 빌드” & “다운로드” 버튼 추가
+            BUTTONS='
+              { "type": 2, "style": 5, "label": "성공한 빌드", "url": "'"$SUCCESS_URL"'" },
+              { "type": 2, "style": 5, "label": "다운로드 (zip)", "url": "'"$ARTIFACT_URL"'" },
+              { "type": 2, "style": 5, "label": "로그 확인", "url": "'"$RUN_URL"'" }
+            '
           fi
 
-          PAYLOAD="$(cat <<JSON
+          read -r -d '' PAYLOAD <<JSON
           {
             "username": "Unity CI",
             "embeds": [
               {
                 "title": "$STATUS",
-                "description": "프로젝트 **${{ github.repository }}**",
+                "description": "프로젝트 **$REPO**",
                 "color": $COLOR,
                 "fields": [
-                  { "name": "Branch", "value": "${{ github.ref_name }}", "inline": true },
-                  { "name": "Run #", "value": "${{ github.run_number }}", "inline": true }
+                  { "name": "Branch", "value": "$REF_NAME", "inline": true },
+                  { "name": "Run #", "value": "$RUN_NUM", "inline": true }
                 ]
               }
             ],
             "components": [
-              { "type": 1, "components": [
-                { "type": 2, "style": 5, "label": "다운로드 (zip)", "url": "$ARTIFACT_URL" },
-                { "type": 2, "style": 5, "label": "로그 확인", "url": "$RUN_URL" }
-              ] }
+              {
+                "type": 1,
+                "components": [ $BUTTONS ]
+              }
             ]
           }
           JSON
-          )"
 
           curl -fsS -H "Content-Type: application/json" -d "$PAYLOAD" "$DISCORD_WEBHOOK_URL" || true
