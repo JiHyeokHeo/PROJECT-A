@@ -106,32 +106,22 @@ jobs:
           RUN_NUM="${{ github.run_number }}"
       
           RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID"
-          SUCCESS_URL="$RUN_URL?check_suite_focus=true"
           ARTIFACT_URL="${RUN_URL}#artifacts"
       
           STATUS="❌ Build Failed"
           COLOR=16711680
-          BUTTONS='
-            { "type": 2, "style": 5, "label": "로그 확인", "url": "'"$RUN_URL"'" }
-          '
-      
           if [ "${{ job.status }}" = "success" ]; then
             STATUS="✅ Build Succeeded"
             COLOR=65280
-            BUTTONS='
-              { "type": 2, "style": 5, "label": "성공한 빌드", "url": "'"$SUCCESS_URL"'" },
-              { "type": 2, "style": 5, "label": "다운로드 (zip)", "url": "'"$ARTIFACT_URL"'" },
-              { "type": 2, "style": 5, "label": "로그 확인", "url": "'"$RUN_URL"'" }
-            '
           fi
       
-          # 👇 heredoc을 cat로 감싸 변수에 담기 (read -d '' 금지)
           PAYLOAD="$(cat <<JSON
           {
             "username": "Unity CI",
             "embeds": [
               {
                 "title": "$STATUS",
+                "url": "$ARTIFACT_URL",
                 "description": "프로젝트 **$REPO**",
                 "color": $COLOR,
                 "fields": [
@@ -139,15 +129,11 @@ jobs:
                   { "name": "Run #", "value": "$RUN_NUM", "inline": true }
                 ]
               }
-            ],
-            "components": [
-              {
-                "type": 1,
-                "components": [ $BUTTONS ]
-              }
             ]
           }
           JSON
           )"
       
-          curl -fsS -H "Content-Type: application/json" -d "$PAYLOAD" "$DISCORD_WEBHOOK_URL" || true
+          curl -fsS -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK_URL" || true
