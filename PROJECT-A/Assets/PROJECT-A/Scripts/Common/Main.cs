@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using A;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,6 +15,7 @@ namespace TST
         Empty,
 
         // Content Scenes
+        Loading,
         Title,
         Ingame,
     }
@@ -28,9 +30,9 @@ namespace TST
             Initialize();
 #if UNITY_EDITOR
             Scene activeScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
-            if (activeScene.name.Equals("Main"))
+            if (activeScene.name.Equals("Loading"))
             {
-                ChangeScene(SceneType.Title);
+                ChangeScene(SceneType.Loading);
             }
 #else
             ChangeScene(SceneType.Title);
@@ -99,6 +101,10 @@ namespace TST
                     break;
                 case SceneType.Ingame:
                     //ChangeScene<IngameMapScene>(SceneType.Ingame, onSceneLoadCompleted);
+                    currentScene = SceneType.Ingame;
+                    break;
+                case SceneType.Loading:
+                    ChangeScene<LoadingScene>(SceneType.Loading, onSceneLoadCompleted);
                     currentScene = SceneType.Ingame;
                     break;
             }

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using A;
+using System.Collections;
+using System.Resources;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -19,7 +21,7 @@ public class Spawner : MonoBehaviour
         //    var p = start + new Vector2(i % 2, i / 2);
         //    Instantiate(CharacterPrefab, p, Quaternion.identity);
         //}
-        var t = Instantiate(bossPrefab, new Vector2(4, 2), Quaternion.identity);
+        var t = ResourceManagerEX.Singleton.Instantiate("Coppybara", new Vector2(4, 2), Quaternion.identity);
         t.SetActive(true);
     }
 }
