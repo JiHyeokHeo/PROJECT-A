@@ -48,11 +48,11 @@ namespace A
                     if (!cooldownGroups.ContainsKey(groupId))
                         cooldownGroups[groupId] = new CooldownGroup(patternArr[i].CoolDown);
 
-                    pattern.SetCooldownGroup(cooldownGroups[groupId]);
+                    pattern.SetCooldownGroup(cooldownGroups[groupId], groupId);
                 }
                 else // 독립 그룹
                 {
-                    pattern.SetCooldownGroup(new CooldownGroup(patternArr[i].CoolDown));
+                    pattern.SetCooldownGroup(new CooldownGroup(patternArr[i].CoolDown), 0);
                 }
 
 
@@ -97,7 +97,10 @@ namespace A
 
                 foreach (var p in patterns)
                 {
-                    if (p != pick)
+                    if (p == pick)
+                        continue;
+
+                    if (p.coolDownGroupId == pick.coolDownGroupId)
                         p.ResetConsecutiveChain(); // 봉인 해제
                 }
             }

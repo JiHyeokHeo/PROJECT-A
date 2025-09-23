@@ -1,0 +1,88 @@
+name: PROEJECT-A
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+env:
+  PROJECT_PATH: PROJECT-A
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 0) Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      # 워킹 디렉토리 깨끗하게 만들기 (checkout 직후 바로!)
+      - name: Clean working dir
+        run: |
+          git reset --hard
+          git clean -fdx
+
+      # (디버그) 폴더 확인
+      - name: Show tree
+        run: |
+          pwd
+          ls -la
+          ls -la "$PROJECT_PATH"
+          ls -la "$PROJECT_PATH/ProjectSettings"
+
+      # 1) Cache (서브폴더 기준으로 교체)
+      - name: Cache Library
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PROJECT_PATH }}/Library
+          key: >
+            Library-${{ runner.os }}-
+            ${{ hashFiles(format('{0}/Assets/**', env.PROJECT_PATH)) }}-
+            ${{ hashFiles(format('{0}/Packages/**', env.PROJECT_PATH)) }}-
+            ${{ hashFiles(format('{0}/ProjectSettings/**', env.PROJECT_PATH)) }}
+          restore-keys: |
+            Library-${{ runner.os }}-
+
+
+
+      # 3) Build
+      - name: Build project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: ${{ env.PROJECT_PATH }}
+          targetPlatform: StandaloneWindows64
+          unityVersion: 6000.0.49f1
+          versioning: Semantic   # 필요없으면 None 으로 바꾸기
+
+      # 4) Upload artifact
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-${{ github.sha }}
+          path: build
+
+      # 5) Send Discord Notification
+      - name: Discord notification
+        if: always()  
+        run: |
+          STATUS="✅ Build succeeded"
+          if [ "${{ job.status }}" != "success" ]; then
+            STATUS="❌ Build failed"
+          fi
+
+          PAYLOAD="{
+            \"username\": \"Unity CI\",
+            \"content\": \"${STATUS}\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nWorkflow: ${{ github.workflow }}\"
+          }"
+
+          curl -H "Content-Type: application/json" \
+               -d "$PAYLOAD" \
+               ${{ secrets.DISCORD_WEBHOOK }}

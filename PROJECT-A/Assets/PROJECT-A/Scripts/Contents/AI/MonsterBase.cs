@@ -2,7 +2,6 @@ using Character;
 using Sirenix.OdinInspector.Editor.TypeSearch;
 using System;
 using TST;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IDamage
@@ -20,7 +19,7 @@ namespace A
         public SpineAnimationDriver animationDriver;
         public MonsterContext monsterContext;
 
-        public bool isFriendly = false; // ¹Ð¸® º¸½º¸÷ÀÌ Á¸ÀçÇÒ °æ¿ì
+        public bool isFriendly = false; // ï¿½Ð¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         public GameObject Target
         {
             get
@@ -42,7 +41,7 @@ namespace A
         }
 
         private GameObject target;
-        // ÀÏ´ÜÀº MonsterBase¿¡¼­ ½Ç½Ã°£ µ¥ÀÌÅÍ °ü¸®
+        // ï¿½Ï´ï¿½ï¿½ï¿½ MonsterBaseï¿½ï¿½ï¿½ï¿½ ï¿½Ç½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         #region Temp Data 
         public float CurrentHP
         {
@@ -58,19 +57,19 @@ namespace A
 
         public float hp;
 
-        float facingSing = 1; // ¿ÞÂÊ 1 ¿À¸¥ÂÊ -1
+        float facingSing = 1; // ï¿½ï¿½ï¿½ï¿½ 1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -1
         #endregion
         public AI_Controller aI_Controller;
         public PatternScheduler patternScheduler;
 
-        // TODO : ÃßÈÄ Å¬·¡½º ºÐÇÒ ÇÊ¿ä
+        // TODO : ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
         public SerializableWrapDictionary<string, MonsterWarningSign> warningSign = new SerializableWrapDictionary<string, MonsterWarningSign>();
 
  
 
         public void SetInfo(int monsterId)
         {
-            // ¿©±â´Ù°¡ SO µ¥ÀÌÅÍ ¿¬µ¿ÇÏ¸é µÉµí?
+            // ï¿½ï¿½ï¿½ï¿½Ù°ï¿½ SO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Éµï¿½?
         }
 
         private void Awake()
