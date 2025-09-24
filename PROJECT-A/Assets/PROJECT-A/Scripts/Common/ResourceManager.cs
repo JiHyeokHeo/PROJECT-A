@@ -40,15 +40,14 @@ namespace A
             var tag = go.GetComponent<ResourceTag>();
 
             if (tag == null)
-                go.AddComponent<ResourceTag>();
+                tag = go.AddComponent<ResourceTag>();
 
             tag.key = key; 
             tag.notified = false;
 
-
             var guard = go.GetComponent<AutoReleaseOnDestroy>();
             if (guard == null)
-                go.AddComponent<AutoReleaseOnDestroy>();
+                guard = go.AddComponent<AutoReleaseOnDestroy>();
 
             guard.Bind(this);
             return go;

@@ -98,6 +98,11 @@ namespace A
             
         }
 
+        private void OnDisable()
+        {
+            monsterContext.CancellationToken.Cancel();
+        }
+
         public void Move(Vector2 dir, float speed)
         {
             Vector2 nextPosition = monsterContext.RigidBody2D.position + dir.normalized * speed * Time.deltaTime;

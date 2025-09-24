@@ -5,8 +5,6 @@ using UnityEngine;
 
 namespace A
 {
-    
-
     public class CopyBara_Rush : MonsterPattern
     {
         // 3초간 캐스팅하며 붉은 반투명한 선으로 범위 표시.
