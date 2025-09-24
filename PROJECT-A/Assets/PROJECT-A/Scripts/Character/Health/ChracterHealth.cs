@@ -14,8 +14,8 @@ namespace Character
 
 
         public bool IsDead => dead;
-        public float CurrentHP => cur;
-        public float MaxHP => maxHp;    
+        public float CurrentHp => cur;
+        public float MaxHp => maxHp;    
 
         public event Action OnDead;
 
@@ -64,7 +64,7 @@ namespace Character
             if (!dead)
                 return false;
             float p = Mathf.Clamp01(hpPercent);
-            cur = Mathf.Clamp(MaxHP * p, 1f, maxHp);
+            cur = Mathf.Clamp(MaxHp * p, 1f, maxHp);
             dead = false;
 
             return true;

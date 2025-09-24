@@ -85,10 +85,10 @@ namespace Character
 
                     var dmgPacket = new Damage
                     {
-                        amount = dmg + (caster.Stats?.Atk ?? 0f),
-                        kind = DamageKind.Physical,
-                        source = caster.Transform.gameObject,
-                        hitPoint = _hits[i].bounds.ClosestPoint(next),
+                        Amount = dmg + (caster.Stats?.Atk ?? 0f),
+                        Kind = DamageKind.Physical,
+                        Source = caster.Transform.gameObject,
+                        HitPoint = _hits[i].bounds.ClosestPoint(next),
                     };
                     CombatUtility.ApplyDamage(ch, dmgPacket);
                     hitNow = true;

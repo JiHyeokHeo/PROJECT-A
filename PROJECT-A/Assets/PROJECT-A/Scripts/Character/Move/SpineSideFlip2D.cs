@@ -3,7 +3,7 @@ using Character;
 using Spine.Unity;
 
 [DisallowMultipleComponent]
-public class SpineSideFlip2D : MonoBehaviour
+public class SpineSideFlip2D : MonoBehaviour , ICapability
 {
     [SerializeField] SkeletonRenderer skeleton;
     //방향이 오른쪽 기본이면 true
@@ -14,17 +14,17 @@ public class SpineSideFlip2D : MonoBehaviour
     // 스킬/평타 중에는 잠금
     [SerializeField] bool freezeWhileLocked = true;
 
-    private ActionLock actionLock;
-    private Transform self;
-    private int facing = +1;
+    private ActionLock _actionLock;
+    private Transform _self;
+    private int _facing = +1;
 
-    bool CanFlip() => !(freezeWhileLocked && actionLock && actionLock.IsLocked);
+    bool CanFlip() => !(freezeWhileLocked && _actionLock && _actionLock.IsLocked);
 
     private void Awake()
     {
-        self = transform;
+        _self = transform;
         skeleton = GetComponent<SkeletonRenderer>();
-        actionLock = GetComponent<ActionLock>();
+        _actionLock = GetComponent<ActionLock>();
     }
 
     public void FaceByVelocity(Vector2 vel)
@@ -40,7 +40,7 @@ public class SpineSideFlip2D : MonoBehaviour
     {
         if (!CanFlip())
             return;
-        float dx = worldPoint.x - self.position.x;
+        float dx = worldPoint.x - _self.position.x;
         if (Mathf.Abs(dx) < 1e-6f)
             return;
         SetFacing(dx >= 0f ? +1 : -1);
@@ -52,9 +52,9 @@ public class SpineSideFlip2D : MonoBehaviour
 
     private void SetFacing(int dir)
     {
-        if (skeleton == null || facing == dir)
+        if (skeleton is null || _facing == dir)
             return;
-        facing = dir;
+        _facing = dir;
 
         var skel = skeleton.Skeleton;
         float baseSign = facesRightByDefault ? 1f : -1f;

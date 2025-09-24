@@ -1,10 +1,9 @@
-using Character;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-public interface ISkillSet
+namespace Character
 {
-    IEnumerable<ISkill> Skills { get; }
-    ISkill Get(SkillSlot slot);
-    void Bind(SkillSlot slot, ISkill skill);
-    bool TryCast(SkillSlot slot, ICharacter caster);
+    public interface ISkillSet
+    {
+        IEnumerable<ISkill> Skills { get; }
+    }
 }

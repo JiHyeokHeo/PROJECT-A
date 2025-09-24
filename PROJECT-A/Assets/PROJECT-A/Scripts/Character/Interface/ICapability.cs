@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Character
 {
-    public interface ICapacity
+    public interface ICapability
     {
     }
 }

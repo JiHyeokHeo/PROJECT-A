@@ -7,17 +7,16 @@ namespace Character
 {
     public class ChracterStateMachine : MonoBehaviour, IStateMachine
     {
-        [SerializeField]
-        CharacterState _state = CharacterState.Idle;
-        public CharacterState State => _state;
+        [SerializeField] private CharacterState state = CharacterState.Idle;
+        public CharacterState State => state;
         public event Action<CharacterState> OnStateChanged;
 
-        public void ChangeState(CharacterState state)
+        public void ChangeState(CharacterState currentState)
         {
-            if (_state == state)
+            if (state == currentState)
                 return;
-            _state = state;
-            OnStateChanged?.Invoke(state);
+            state = currentState;
+            OnStateChanged?.Invoke(currentState);
         }
     }
 }

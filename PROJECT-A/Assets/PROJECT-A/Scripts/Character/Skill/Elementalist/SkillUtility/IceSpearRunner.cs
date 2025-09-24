@@ -60,9 +60,9 @@ public class IceSpearRunner : MonoBehaviour
                 proj = go.AddComponent<HomingProjectile2D>();
             var dmg = new Damage 
             {
-                amount = baseDmg + (caster.Stats?.Atk ?? 0f),
-                kind = DamageKind.Magical,
-                source =caster.Transform.gameObject 
+                Amount = baseDmg + (caster.Stats?.Atk ?? 0f),
+                Kind = DamageKind.Magical,
+                Source =caster.Transform.gameObject 
             };
             proj.Init(caster, target, dir, dmg, speed, turnRateDeg, hitRadius, maxLifetime, enemyMask);
         }

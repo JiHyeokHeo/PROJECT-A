@@ -11,7 +11,7 @@ namespace Character
         public event Action<bool> OnLockChanged;
 
         private int _lockCount;
-        private bool _timedActive;         // 시간제 잠금이 현재 활성인지
+        private bool _timedActive;  
         private Coroutine _timedCo;
 
         public void Lock()
@@ -31,7 +31,7 @@ namespace Character
             if (!_timedActive)
             {
                 _timedActive = true;
-                _lockCount++;   // 시간제 잠금 첫 시작 때만 +1
+                _lockCount++;
                 UpdateState();
             }
 
@@ -43,7 +43,7 @@ namespace Character
             yield return new WaitForSeconds(s);
 
             _timedActive = false;
-            _lockCount = Mathf.Max(0, _lockCount - 1); // 시간제 슬롯 해제
+            _lockCount = Mathf.Max(0, _lockCount - 1); 
             UpdateState();
 
             _timedCo = null;

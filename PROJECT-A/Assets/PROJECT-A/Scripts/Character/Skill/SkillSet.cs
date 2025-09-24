@@ -4,56 +4,51 @@ using UnityEngine;
 
 namespace Character
 {
-    public class SkillSet : MonoBehaviour, ISkillSet
+    [DefaultExecutionOrder(-5)]
+    public class SkillSet : MonoBehaviour, ISkillSet, ICapability, ITickable
     {
-        [SerializeField]
-        SkillBase skillQ;
-        [SerializeField]
-        SkillBase skillW;
-        [SerializeField]
-        SkillBase skillE;
-        [SerializeField]
-        SkillBase skillR;
+        [SerializeField] private List<MonoBehaviour> _skillBehaviours = new();
+        private readonly List<ISkill> _skills = new();
+        private ICharacter _owner;
 
-        public IEnumerable<ISkill> Skills
+        [SerializeField] private int _maxTotalSlots = 2;
+        public IEnumerable<ISkill> Skills => _skills;
+
+        private void Awake()
         {
-            get
+            _owner = GetComponentInParent<ICharacter>(true);
+            _skills.Clear();
+            foreach (var mb in _skillBehaviours)
             {
-                if (skillQ) yield return skillQ;
-                if (skillW) yield return skillW;
-                if (skillE) yield return skillE;
-                if (skillR) yield return skillR;
+                if (mb is ISkill s)
+                {
+                    s.Initialize(_owner);
+                    _skills.Add(s);
+                }
+            }
+            EnforceSlotRules();
+        }
+
+        private void EnforceSlotRules()
+        {
+            int macroCount = 0;
+            int activeCount = 0;
+            foreach (var s in _skills)
+            {
+                if (s.Kind == SkillKind.Macro) macroCount++;
+                else if (s.Kind == SkillKind.ActiveImmediate || s.Kind == SkillKind.ActiveToggle) activeCount++;
+            }
+            if (activeCount > 2 || (activeCount == 2 && macroCount > 0) || 
+                (activeCount + macroCount) > _maxTotalSlots)
+            {
+                Debug.LogWarning($"[SkillSet] Slot rule violation on {_owner}. Active:{activeCount}, Macro:{macroCount}");
             }
         }
-        public ISkill Get(SkillSlot slot) => slot switch
+
+        public void Tick(float dt)
         {
-            SkillSlot.Q => skillQ,
-            SkillSlot.W => skillW,
-            SkillSlot.E => skillE,
-            SkillSlot.R => skillR,
-            _ => null
-        };
-        // 런타임에 슬롯을 바꿀경우
-        public void Bind(SkillSlot slot, ISkill skill)
-        {
-            var def = skill as SkillBase;
-            switch (slot)
-            {
-                case SkillSlot.Q: skillQ = def; break;
-                case SkillSlot.W: skillW = def; break;
-                case SkillSlot.E: skillE = def; break;
-                case SkillSlot.R: skillR = def; break;
-            }
-        }
-        public bool TryCast(SkillSlot slot, ICharacter caster)
-        {
-            var s = Get(slot);
-            if (s == null)
-                return false;
-            if (!s.CanCast(caster))
-                return false;
-            s.Cast(caster, caster.Transform.position, null);
-            return true;
+            foreach (var s in _skills)
+                s.Tick(_owner, dt);
         }
     }
 }

@@ -24,8 +24,8 @@ public static class CombatSearch
             if (!col)
                 continue;
 
-            var ch = col.GetComponent<ICharacter>();
-            if (ch == null)
+            
+            if (!col.TryGetComponent<ICharacter>(out var ch))
                 continue;
 
             if (filter != null && !filter(ch))
@@ -40,29 +40,6 @@ public static class CombatSearch
         }
         return best;
     }
-
-    //public static ICharacter HightestHP(Vector2 origin, float radius, LayerMask mask, Collider2D[] buffer, Func<ICharacter, bool> filter = null)
-    //{
-    //    int n = Physics2D.OverlapCircleNonAlloc(origin, radius, buffer, mask);
-    //    ICharacter best = null;
-    //    float bestHp = float.NegativeInfinity;
-
-    //    for (int i =0; i < n; i++)
-    //    {
-    //        var col = buffer[i];
-    //        if (!col)
-    //            continue;
-    //        var ch = col.GetComponent<ICharacter>();
-    //        if (filter != null && !filter(ch))
-    //            continue;
-
-    //        // 여기에 HP가 많은 친구를 찾아 공격 (지혁님하고 동기화)
-    //        //float hp = ch.Health
-
-    //    }
-    //}
-    
-
     public static bool IsAlive(ICharacter ch)
         => ch != null && ch.Health != null && !ch.Health.IsDead;
     public static Func<ICharacter, bool> Alive()

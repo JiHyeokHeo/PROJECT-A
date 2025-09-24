@@ -35,9 +35,9 @@ public class LightningRunner : MonoBehaviour
         if (best != null)
         {
             float dmgAmount = empowered ? baseDmg * empowerMul : baseDmg;
-            var dmg = new Damage { amount = dmgAmount + (caster.Stats?.Atk ?? 0f),
-                kind = DamageKind.Magical, source = ((Component)caster.Transform).gameObject,
-                hitPoint = (Vector2)best.Transform.position };
+            var dmg = new Damage { Amount = dmgAmount + (caster.Stats?.Atk ?? 0f),
+                Kind = DamageKind.Magical, Source = ((Component)caster.Transform).gameObject,
+                HitPoint = (Vector2)best.Transform.position };
             CombatUtility.ApplyDamage(best, dmg);
 
         }

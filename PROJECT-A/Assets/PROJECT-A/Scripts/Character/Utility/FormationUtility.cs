@@ -1,7 +1,5 @@
 ﻿using Character;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using UnityEngine;
 
 public static class FormationUtility
@@ -37,11 +35,32 @@ public static class FormationUtility
         }
         return localSlots;
     }
-    public static List<ICharacter> StableOrder(IEnumerable<ICharacter> chars)
+    private sealed class YXComparer : IComparer<ICharacter>
     {
-        return chars
-            .OrderBy(c => c.Transform.position.y)
-            .ThenBy(c => c.Transform.position.x)
-            .ToList();
+        public static readonly YXComparer Instance = new();
+        public int Compare(ICharacter a, ICharacter b)
+        {
+            // y 우선
+            float ay = a.Transform.position.y;
+            float by = b.Transform.position.y;
+            if (ay < by) return -1;
+            if (ay > by) return 1;
+
+            // x 다음
+            float ax = a.Transform.position.x;
+            float bx = b.Transform.position.x;
+            if (ax < bx) return -1;
+            if (ax > bx) return 1;
+            int ai = a.Transform.GetInstanceID();
+            int bi = b.Transform.GetInstanceID();
+            return ai.CompareTo(bi);
+        }
+    }
+
+    public static void StableOrderNonLinq(IEnumerable<ICharacter> chars, List<ICharacter> dst)
+    {
+        dst.Clear();
+        dst.AddRange(chars);
+        dst.Sort(YXComparer.Instance);
     }
 }

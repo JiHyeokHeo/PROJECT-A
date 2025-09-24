@@ -1,12 +1,23 @@
 ﻿using UnityEngine;
-using Character;
-public interface ISkill
+
+namespace Character
 {
-    KeyCode HotKey { get; }
-    SkillTargetType Type { get; }
-    
-    float Range { get; }
-    float CoolDown { get; }
-    bool CanCast(ICharacter caster);
-    void Cast(ICharacter caster, Vector2 point, ISelectable target);
+
+
+    public interface ISkill
+    {
+        KeyCode HotKey { get; }
+        SkillKind Kind { get; }
+        SkillTargetType TargetType { get; }
+        
+        bool IsOn { get; }
+        bool IsCoolingDown { get; }
+        float RemainingCooldown { get; }
+
+        void Initialize(ICharacter owner);
+        bool CanCast(ICharacter caster, SkillCastContext ctx);
+        void Cast(ICharacter caster, SkillCastContext ctx);
+
+        void Tick(ICharacter caster, float dt);
+    }
 }

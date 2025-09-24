@@ -3,42 +3,44 @@ using UnityEngine;
 
 namespace Character
 {
-    public class RollAbility : MonoBehaviour
+    public class RollAbility : MonoBehaviour, ICapability
     {
-        [SerializeField] float rollSpeed = 8f;
-        [SerializeField] float rollTime = 0.25f;
+        [SerializeField] 
+        private float rollSpeed = 8f;
+        [SerializeField] 
+        private float rollTime = 0.25f;
 
-        Rigidbody2D rb;
-        IMovable movable;
-        CharacterAnimatorDriver driver;
-        ActionLock actionLock;
+        private Rigidbody2D _rb;
+        private IMovable _movable;
+        private CharacterAnimatorDriver _driver;
+        private ActionLock _actionLock;
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody2D>();
-            movable = GetComponent<IMovable>();
-            driver = GetComponent<CharacterAnimatorDriver>();
-            actionLock = GetComponent<ActionLock>();
+            _rb = GetComponent<Rigidbody2D>();
+            _movable = GetComponent<IMovable>();
+            _driver = GetComponent<CharacterAnimatorDriver>();
+            _actionLock = GetComponent<ActionLock>();
         }
 
         public void Roll(Vector2 dir)
         {
-            if (actionLock.IsLocked)
+            if (_actionLock.IsLocked)
                 return;
             StartCoroutine(CoRoll(dir.normalized));
         }
 
         IEnumerator CoRoll(Vector2 dir)
         {
-            movable?.Stop();
-            actionLock.LockFor(rollTime);
-            driver.TriggerRoll();
+            _movable?.Stop();
+            _actionLock.LockFor(rollTime);
+            _driver.TriggerRoll();
 
             float t = 0f;
             Vector2 v = dir * rollSpeed;
             while (t < rollTime)
             {
-                rb.velocity = v;
+                _rb.velocity = v;
                 t += Time.deltaTime;
                 yield return null;
             }

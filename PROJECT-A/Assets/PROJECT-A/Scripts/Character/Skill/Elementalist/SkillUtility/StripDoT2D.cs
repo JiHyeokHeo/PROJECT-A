@@ -58,10 +58,10 @@ public class StripDoT2D : MonoBehaviour
 
                 var packet = new Damage
                 {
-                    amount = dmgPerTick,
-                    kind = DamageKind.Magical,
-                    source = caster.Transform.gameObject,
-                    hitPoint = _hits[i].bounds.ClosestPoint(center),
+                    Amount = dmgPerTick,
+                    Kind = DamageKind.Magical,
+                    Source = caster.Transform.gameObject,
+                    HitPoint = _hits[i].bounds.ClosestPoint(center),
                 };
                 CombatUtility.ApplyDamage(ch, packet);
             }

@@ -8,7 +8,7 @@ namespace Character
     public interface ICharacter
     {
         string Id { get; }
-        Faction faction { get; }
+        Faction Faction { get; }
         Transform Transform { get; }
 
         IStats Stats { get; }
@@ -20,7 +20,7 @@ namespace Character
     public enum Faction
     {
         Player = 0,
-        Enmey = 1,
+        Enemy = 1,
         Neutral = 2,
     }
 }

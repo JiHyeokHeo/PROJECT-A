@@ -35,9 +35,9 @@ public class KnightSlash : SkillBase
             {
                 CombatUtility.ApplyDamage(ch, new Damage
                 {
-                    amount = damage + (caster.Stats?.Atk ?? 0f),
-                    kind = DamageKind.Physical,
-                    source = ((Component)caster.Transform).gameObject
+                    Amount = damage + (caster.Stats?.Atk ?? 0f),
+                    Kind = DamageKind.Physical,
+                    Source = ((Component)caster.Transform).gameObject
                 });
             }
         }

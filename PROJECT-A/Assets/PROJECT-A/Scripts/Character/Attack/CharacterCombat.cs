@@ -1,159 +1,191 @@
 ﻿using Character;
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
 
-
-public class CharacterCombat : MonoBehaviour
+public class CharacterCombat : MonoBehaviour, ICapability, ITickable
 {
     [SerializeField] private LayerMask enemyMask;
 
     [Header("테스트용 하드코딩")]
-    [SerializeField] private float attackRange = 1.5f; // 평타 사거리
-    [SerializeField] private float attackWindup = 0.12f; // 평타 휘두르는 속도
-    [SerializeField] private float attackCooldown = 0.8f; // 평타 쿨타임
-    [SerializeField] private float baseDamage = 15f; // 기본 데미지
+    [SerializeField] 
+    private float attackRange = 1.5f; // 평타 사거리
+    [SerializeField] 
+    private float attackWindup = 0.12f; // 평타 휘두르는 속도
+    [SerializeField] 
+    private float attackCooldown = 0.8f; // 평타 쿨타임
+    [SerializeField] 
+    private float baseDamage = 15f; // 기본 데미지
+    
+    [SerializeField]
+    private bool autoAggro = true;
+    [SerializeField]
+    private float retargetCooldown = 0.2f;
+    private float _nextRetargetTime = 0f;
 
     public ICharacter Self { get; private set; } // 시전자
+    IMovable _movable;
+    ActionLock _lock;
+    CharacterAnimatorDriver _anim;
+    SpineSideFlip2D _flip;
+    AggroSensor _sensor;
 
-    private ICharacter currentTarget; // 타겟
 
-    private bool attackMoveActive; // A 무브 활성화 여부
-    private Vector2 attackMoveDest;
+    private ICharacter _currentTarget; // 타겟
+    private bool _attackMoveActive; // A 무브 활성화 여부
+    private Vector2 _attackMoveDest;
 
     //직전프레임에 타겟 추격중이었으면 true
-    private bool wasChasingTarget = false;
-    private bool isAttacking = false;
-    private float nextAttackReady;
+    private bool _wasChasingTarget;
+    private bool _isAttacking;
+    private float _nextAttackReady;
 
     public void CancelAll()
     {
         StopAllCoroutines();
-        isAttacking = false;
-        //currentTarget.Movable?.Stop();
-        currentTarget = null;
-        attackMoveActive = false;
-        Self = null;
+        _isAttacking = false;
+        _attackMoveActive = false;
+        _currentTarget = null;
+        _wasChasingTarget = false;
+        _movable.Stop();
     }
 
-    private void Update()
+    private void Awake()
     {
-        if (Self == null || Self.Health == null)
-            return;
+        Self = GetComponentInParent<ICharacter>(true);
+        _movable = Self.GetCapability<IMovable>();
+        _lock = Self.GetCapability<ActionLock>();
+        _anim = Self.GetCapability<CharacterAnimatorDriver>();
+        _flip = Self.GetCapability<SpineSideFlip2D>();
+        _sensor = Self.GetCapability<AggroSensor>();
+    }
 
-        // 타깃이 죽었으면 참조 해제
-        if (currentTarget != null && currentTarget.Health.IsDead)
-            currentTarget = null;
+    public void Tick(float dt)
+    {
+        if (_currentTarget != null && _currentTarget.Health.IsDead)
+            _currentTarget = null;
 
-        if (wasChasingTarget && currentTarget == null)
+        if (_wasChasingTarget && _currentTarget == null)
         {
-            attackMoveActive = false;
+            _attackMoveActive = false;
             StopHere();
-            wasChasingTarget=false;
+            _wasChasingTarget = false;
             return;
         }
 
-        if (attackMoveActive && currentTarget == null)
+        if (_currentTarget == null)
         {
-            var t = FindNearestEnmy(transform.position, attackRange);
-            if (t != null)
-                SetTarget(t);
-            else
-                Self.Movable?.MoveTo(attackMoveDest);
+            if (_sensor is not null)
+            {
+               if (Time.time >= _nextRetargetTime)
+               {
+                    _nextRetargetTime = Time.time + retargetCooldown;
+
+                    _sensor.Prune();
+
+                    ICharacter best = null;
+                    float bestD = float.PositiveInfinity;
+                    foreach (var c in _sensor.InRange)
+                    {
+                        if (c == null || c.Health ==null || c.Health.IsDead)
+                            continue;
+                        float dist = Vector2.Distance(transform.position, c.Transform.position);
+                        if (dist < bestD)
+                        {
+                            bestD = dist;
+                            best = c;
+                        }
+                    }
+                    if (best != null)
+                        SetTarget(best);
+                }
+            }
+
+            if (_attackMoveActive && _currentTarget == null)
+            {
+                _movable.MoveTo(_attackMoveDest);
+            }
+            if (_currentTarget == null)
+            {
+                _wasChasingTarget = false;
+                return;
+            }
         }
-        if (currentTarget != null)
+        float r = attackRange * 0.98f;
+        float r2 = r * r;
+        float d2 = ((Vector2)transform.position - (Vector2)_currentTarget.Transform.position).sqrMagnitude;
+
+        if (d2 > r2)
         {
-            float d = Vector2.Distance(transform.position, currentTarget.Transform.position);
-            if (d > attackRange * 0.98f)
-            {
-                Self.Movable?.MoveTo(currentTarget.Transform.position);
-                wasChasingTarget = true;
-            }
-            else
-            {
-                TryBasicAttack();
-                wasChasingTarget = true;
-            }
+            _movable.MoveTo(_currentTarget.Transform.position);
+            _wasChasingTarget = true;
         }
         else
         {
-            if (!attackMoveActive) wasChasingTarget = false;
+            TryBasicAttack();
+            _wasChasingTarget = true;
         }
-    }
 
-    public void IssueAttackMove(Vector2 dest, ICharacter caster)
+    }
+    public void IssueAttackMove(Vector2 dest)
     {
-        Self = caster;
-        attackMoveActive = true;
-        attackMoveDest = dest;
-        currentTarget = null;
-        Self.Movable?.MoveTo(dest);
+        _attackMoveActive = true;
+        _attackMoveDest = dest;
+        _currentTarget = null;
+        _movable.MoveTo(dest);
+    }
+    public void IssueAttackTarget(ICharacter target)
+    {
+        _attackMoveActive = false;
+        _currentTarget = target;
     }
 
     public void SetTarget(ICharacter t)
     {
-        attackMoveActive = false;
-        currentTarget = t;
-    }
-
-    public ICharacter FindNearestEnmy(Vector2 pos, float radius)
-    {
-        var hits = Physics2D.OverlapCircleAll(pos, radius, enemyMask);
-
-        float best = float.PositiveInfinity;
-        ICharacter cho = null;
-        foreach (var h in hits)
-        {
-            var ch = h.GetComponent<ICharacter>();
-            if (ch == null || ch.Health.IsDead) continue;
-            float d = Vector2.Distance(pos, ch.Transform.position);
-            if (d < best)
-            {
-                best = d;
-                cho = ch;
-            }
-        }
-        return cho;
+        _attackMoveActive = false;
+        _currentTarget = t;
     }
     private void StopHere()           
     {
-        Self.Movable.Stop();
-        isAttacking = false;        
+        _movable.Stop();
+        _isAttacking = false;        
     }
-    public void IssueAttackTarget(ICharacter target, ICharacter caster)
-    {
-        Self = caster;
-        attackMoveActive = false;
-        currentTarget = target;
-    }
+
     private void TryBasicAttack()
     {
-        if (isAttacking) return;
-        if (Time.time < nextAttackReady)
+        if (_isAttacking) return;
+        if (Time.time < _nextAttackReady)
             return;
-        if (Self.Lock != null && Self.Lock.IsLocked)
+        if (_lock is not null && _lock.IsLocked)
             return;
         StartCoroutine(CoBasicAttack());
     }
 
     IEnumerator CoBasicAttack()
     {
-        isAttacking = true;
-        Self.Movable?.Stop();
+        _isAttacking = true;
+        _movable.Stop();
 
-        Self.Driver?.TriggerAction((int)ActionNumber.Attack);
-        Self.Lock?.LockFor(0.25f);
+        _anim.TriggerAction((int)ActionNumber.Attack);
+        _lock.LockFor(0.25f);
 
         yield return new WaitForSeconds(attackWindup);
 
-        var flipper = Self.SpineSideFlip;
-        if (currentTarget != null && !currentTarget.Health.IsDead)
+        if (_currentTarget != null && !_currentTarget.Health.IsDead)
         {
-            flipper?.FaceByPoint(currentTarget.Transform.position);
-            var dmg = new Damage { amount = baseDamage + (Self?.Stats?.Atk ?? 0f), kind = DamageKind.Physical, source = gameObject };
-            CombatUtility.ApplyDamage(currentTarget, dmg);
+            _flip?.FaceByPoint(_currentTarget.Transform.position);
+            var atk = Self.Stats.Atk;
+            var aspd = Self?.Stats?.AtkSpeed;
+
+            var dmg = new Damage
+            {
+                Amount = baseDamage + atk,
+                Kind = DamageKind.Physical,
+                Source = gameObject
+            };
+            CombatUtility.ApplyDamage(_currentTarget, dmg);
+            _nextAttackReady = Time.time + attackCooldown / Mathf.Max(0.1f, (Self?.Stats?.AtkSpeed?? 1f));
         }
-        nextAttackReady = Time.time + attackCooldown / Mathf.Max(0.1f, (Self?.Stats?.AtkSpeed?? 1f));
-        isAttacking = false;
+        
+        _isAttacking = false;
     }
 }

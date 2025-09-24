@@ -83,9 +83,9 @@ public class FlameRoadRunner : MonoBehaviour
                 if (ch == null || ch.Health.IsDead) continue;
                 var dmg = new Damage 
                 {
-                    amount = perTickDamage + caster.Stats.Atk * 0.2f,
-                    kind = DamageKind.Magical,
-                    source = caster.Transform.gameObject
+                    Amount = perTickDamage + caster.Stats.Atk * 0.2f,
+                    Kind = DamageKind.Magical,
+                    Source = caster.Transform.gameObject
                 };
                 CombatUtility.ApplyDamage(ch, dmg);
             }

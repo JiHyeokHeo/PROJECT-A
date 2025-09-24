@@ -1,39 +1,41 @@
 ﻿using Character;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Moveable : MonoBehaviour, IMovable
 {
+    // 가속/감속 계수
     [SerializeField] private float defaultMoveSpeed = 5f;
+    [SerializeField] private float accel = 15f;
+
     
     // 최종 목적지와의 거리 차이
     [SerializeField] private float arriveDist = 0.1f;
-    
-    // 웨이 포인트에 대해 "충분히 가까움" 판정 반경 
     [SerializeField] private float waypointArriveDist = 0.12f;
-
-    [SerializeField] private int maxAllyScan = 32;
-    private Collider2D[] _allyBuffer;
-    // 가속/감속 계수
-    [SerializeField] private float accel = 15f;
-
+    
     //분리 파라미터. separationRadius 안에 있는 아군(allyMask)에 대해 서로 밀어내는 힘을 살짝 주어 겹침/비빔을 줄임.
+    [SerializeField] private int maxAllyScan = 32;
     [SerializeField] private float separationRadius = 0.1f;
     [SerializeField] private float separationStrength = 1.0f;
     [SerializeField] private LayerMask allyMask;
 
-    [SerializeField] private bool usePathfinder = true;
-    private IPathfinder pathfinder;
+    private Collider2D[] _allyBuffer;
 
-    [SerializeField] private SpineSideFlip2D spineSideFlip;
+    [SerializeField] private bool usePathfinder = true;
+    private IPathfinder _pathfinder;
+
+    [SerializeField] 
+    private SpineSideFlip2D spineSideFlip;
 
     // 물리 이동 주체
     private Rigidbody2D rb;
-    private readonly Queue<Vector2> waypoints = new();
+
+    private readonly Queue<Vector2> _waypoints = new();
     //현재 이동중인지
-    private bool hasPath;
+    private bool _hasPath;
     //최종 목표
-    private Vector2 finalGoal;
+    private Vector2 _finalGoal;
 
     // 새 명령을 연달아 찍을 때 떨림 방지
     [SerializeField] 
@@ -41,16 +43,43 @@ public class Moveable : MonoBehaviour, IMovable
     private float _separationResumeTime;
     private Vector2 _lastIssuedTarget;
 
-
     private IStats stats;
+
+    public event Action<Vector2, MoveArriveReason> onArrived;
+
     public bool CanMove => true;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 0; 
+        rb.freezeRotation = true; 
+
+        _allyBuffer = new Collider2D[maxAllyScan];
+      
+        if (usePathfinder)
+            _pathfinder = FindObjectOfType<NavPathfinder>();
+    }
+
     public void Stop()
     {
-        hasPath = false;
-        waypoints.Clear();
+        bool wasMoving = _hasPath;
+        _hasPath = false;
+        _waypoints.Clear();
         rb.velocity = Vector2.zero;
-        finalGoal = rb.position;
+
+        if (wasMoving)
+            SafeInvokeArrived(_finalGoal, MoveArriveReason.Cancelled);
+
+        _finalGoal = rb.position;
     }
+
+    void SafeInvokeArrived(in Vector2 dest, MoveArriveReason reason)
+    {
+        if (onArrived != null) 
+            onArrived.Invoke(dest, reason);
+    }
+
     public void MoveTo(Vector2 worldPos)
     {
         // 같은 지점 연타 방지
@@ -58,16 +87,16 @@ public class Moveable : MonoBehaviour, IMovable
             return;
         _lastIssuedTarget = worldPos;
 
-        finalGoal = worldPos;
-        waypoints.Clear();
+        _finalGoal = worldPos;
+        _waypoints.Clear();
 
         rb.velocity = Vector2.zero;
         _separationResumeTime = Time.time + separationPauseOnNewOrder;
 
-        if (usePathfinder && pathfinder != null)
+        if (usePathfinder && _pathfinder != null)
         {
             var start = rb.position;
-            var path = pathfinder.FindPath(start, worldPos);
+            var path = _pathfinder.FindPath(start, worldPos);
             if (path != null && path.Count > 0)
             {
                 const float minStep = 0.12f;
@@ -76,65 +105,54 @@ public class Moveable : MonoBehaviour, IMovable
                 {
                     if ((p - prev).sqrMagnitude >= minStep *  minStep)
                     {
-                        waypoints.Enqueue(p);
+                        _waypoints.Enqueue(p);
                         prev = p;
                     }
                 }
-                finalGoal = prev;
-                hasPath = true;
+                _finalGoal = prev;
+                _hasPath = true;
                 return;
             }
    
         }
-        waypoints.Enqueue(worldPos);
-        hasPath = true;
-    }
-
-    void Awake()
-    {
-        spineSideFlip = GetComponent<SpineSideFlip2D>();
-        rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0;      // 탑뷰라 중력 끄기
-        rb.freezeRotation = true; // 충돌로 회전하지 않게 잠금
-        _allyBuffer = new Collider2D[maxAllyScan];
-        stats = GetComponent<IStats>();
-        if (usePathfinder)
-            pathfinder = FindObjectOfType<NavPathfinder>();
+        _waypoints.Enqueue(worldPos);
+        _hasPath = true;
     }
 
     void FixedUpdate()
     {
         // 경로가 없으면 부드럽게 정지
-        if (!hasPath)
+        if (!_hasPath)
         {
             rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, accel * Time.fixedDeltaTime);
             return;
         }
         //웨이포인트 없거나 최종 도착 체크
-        if (waypoints.Count == 0)
+        if (_waypoints.Count == 0)
         {
             
-            if (Vector2.Distance(rb.position, finalGoal) <= arriveDist)
+            if (Vector2.Distance(rb.position, _finalGoal) <= arriveDist)
             {
-                hasPath = false;
+                _hasPath = false;
                 rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, accel * Time.fixedDeltaTime);
+                SafeInvokeArrived(_finalGoal, MoveArriveReason.Reached);
                 return;
             }
-            waypoints.Enqueue(finalGoal);
+            _waypoints.Enqueue(_finalGoal);
         }
 
         //현재 타깃와 방향/거리
-        var target = waypoints.Peek();
+        var target = _waypoints.Peek();
         Vector2 to = target - rb.position;
         float dist = to.magnitude;
 
         //웨이포인트 도착 판정
         if (dist <= waypointArriveDist)
         {
-            waypoints.Dequeue();
-            if (waypoints.Count > 0)
+            _waypoints.Dequeue();
+            if (_waypoints.Count > 0)
             {
-                target = waypoints.Peek();
+                target = _waypoints.Peek();
                 to = target - rb.position;
             }
         }
@@ -171,7 +189,7 @@ public class Moveable : MonoBehaviour, IMovable
 
         //가감속으로 속도 보정
         Vector2 steer = (desired - rb.velocity) + sep;
-        Vector2 newVel = rb.velocity + steer * Time.fixedDeltaTime * accel;
+        Vector2 newVel = rb.velocity + steer * (Time.fixedDeltaTime * accel);
         rb.velocity = Vector2.ClampMagnitude(newVel, moveSpeed);
         spineSideFlip.FaceByVelocity(rb.velocity);
     }

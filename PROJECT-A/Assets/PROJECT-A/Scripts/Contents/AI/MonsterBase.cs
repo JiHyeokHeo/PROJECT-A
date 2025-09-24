@@ -10,7 +10,7 @@ namespace A
         public SpineAnimationDriver animationDriver;
         public MonsterContext monsterContext;
 
-        public bool isFriendly = false; // ¹Ð¸® º¸½º¸÷ÀÌ Á¸ÀçÇÒ °æ¿ì
+        public bool isFriendly = false; // ï¿½Ð¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         public GameObject Target
         {
             get
@@ -32,7 +32,7 @@ namespace A
         }
 
         private GameObject target;
-        // ÀÏ´ÜÀº MonsterBase¿¡¼­ ½Ç½Ã°£ µ¥ÀÌÅÍ °ü¸®
+        // ï¿½Ï´ï¿½ï¿½ï¿½ MonsterBaseï¿½ï¿½ï¿½ï¿½ ï¿½Ç½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         #region Temp Data 
         public float CurrentHP
         {
@@ -51,12 +51,12 @@ namespace A
         //public event Action<float, Vector2> OnDamagedEvent;
         //public event Action OnDeadEvent;
 
-        float facingSing = 1; // ¿ÞÂÊ 1 ¿À¸¥ÂÊ -1
+        float facingSing = 1; // ï¿½ï¿½ï¿½ï¿½ 1 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ -1
         #endregion
         public AI_Controller aI_Controller;
         public PatternScheduler patternScheduler;
 
-        // TODO : ÃßÈÄ Å¬·¡½º ºÐÇÒ ÇÊ¿ä
+        // TODO : ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
         public SerializableWrapDictionary<string, MonsterWarningSign> warningSign = new SerializableWrapDictionary<string, MonsterWarningSign>();
 
         public void ApplyDamage(float damage)
@@ -66,7 +66,7 @@ namespace A
 
         public void SetInfo(int monsterId)
         {
-            // ¿©±â´Ù°¡ SO µ¥ÀÌÅÍ ¿¬µ¿ÇÏ¸é µÉµí?
+            // ï¿½ï¿½ï¿½ï¿½Ù°ï¿½ SO ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Éµï¿½?
         }
 
         private void Awake()
@@ -106,7 +106,7 @@ namespace A
 
         //void OnDamaged(float dmg, Vector2 hitDir)
         //{
-        //    // µ¥¹ÌÁö¸¦ ÁØ ÁÖÃ¼ÀÚ¸¦ Ã£´Â ¹æ½ÄÀÌ ÁÁÀ»±î 
+        //    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½Ú¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
         //}
         
         void OnDead()

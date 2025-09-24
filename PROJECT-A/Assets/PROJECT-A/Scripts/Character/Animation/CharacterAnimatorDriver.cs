@@ -4,24 +4,24 @@ using UnityEngine;
 
 namespace Character
 {
-    public class CharacterAnimatorDriver : MonoBehaviour
+    public class CharacterAnimatorDriver : MonoBehaviour , ICapability
     {
         [SerializeField]
         private Animator animator;
         [SerializeField]
         private Rigidbody2D rb;
 
-        private IStats stats;
-        private ActionLock actionLock;
+        private IStats _stats;
+        private ActionLock _actionLock;
 
-        static readonly int HASH_Speed = Animator.StringToHash("Speed");
-        static readonly int HASH_ActionTrigger = Animator.StringToHash("ActionTrigger");
-        static readonly int HASH_ActionID = Animator.StringToHash("ActionID");
-        static readonly int HASH_RollTrigger = Animator.StringToHash("RollTrigger");
-        static readonly int HASH_DieTrigger = Animator.StringToHash("DieTrigger");
-        static readonly int HASH_StunTrigger = Animator.StringToHash("StunTrigger");
-        static readonly int HASH_StunEnd = Animator.StringToHash("StunEnd");
-        static readonly int HASH_isActionLocked = Animator.StringToHash("isActionLocked");
+        private static readonly int HashSpeed = Animator.StringToHash("Speed");
+        private static readonly int HashActionTrigger = Animator.StringToHash("ActionTrigger");
+        private static readonly int HashActionID = Animator.StringToHash("ActionID");
+        private static readonly int HashRollTrigger = Animator.StringToHash("RollTrigger");
+        private static readonly int HashDieTrigger = Animator.StringToHash("DieTrigger");
+        private static readonly int HashStunTrigger = Animator.StringToHash("StunTrigger");
+        private static readonly int HashStunEnd = Animator.StringToHash("StunEnd");
+        private static readonly int HashIsActionLocked = Animator.StringToHash("isActionLocked");
 
         private void Awake()
         {
@@ -29,40 +29,40 @@ namespace Character
                 animator = GetComponent<Animator>();
             if (!rb)
                 rb = GetComponent<Rigidbody2D>();
-            stats = GetComponent<IStats>();
-            actionLock = GetComponent<ActionLock>();
-            if (actionLock)
-                actionLock.OnLockChanged += OnLockChanged;
+            _stats = GetComponent<IStats>();
+            _actionLock = GetComponent<ActionLock>();
+            if (_actionLock)
+                _actionLock.OnLockChanged += OnLockChanged;
         }
 
         private void OnDestroy()
         {
-            if (actionLock)
-                actionLock.OnLockChanged -= OnLockChanged;
+            if (_actionLock)
+                _actionLock.OnLockChanged -= OnLockChanged;
         }
 
         void OnLockChanged(bool on)
         {
-            animator.SetBool(HASH_isActionLocked, on);
+            animator.SetBool(HashIsActionLocked, on);
         }
 
         private void FixedUpdate()
         {
-            float max = (stats != null ? Mathf.Max(0.01f, stats.Speed) : 5f);
+            float max = (_stats != null ? Mathf.Max(0.01f, _stats.Speed) : 5f);
             float normalized = Mathf.Clamp01(rb.velocity.magnitude / max);
-            animator.SetFloat(HASH_Speed, normalized);
+            animator.SetFloat(HashSpeed, normalized);
         }
 
         public void TriggerAction(int actionId)
         {
-            animator.SetInteger(HASH_ActionID, actionId);
-            animator.ResetTrigger(HASH_ActionTrigger);
-            animator.SetTrigger(HASH_ActionTrigger);
+            animator.SetInteger(HashActionID, actionId);
+            animator.ResetTrigger(HashActionTrigger);
+            animator.SetTrigger(HashActionTrigger);
         }
 
-        public void TriggerRoll() => animator.SetTrigger(HASH_RollTrigger);
-        public void TriggerStun() => animator.SetTrigger(HASH_StunTrigger);
-        public void TriggerStunEnd() => animator.SetTrigger(HASH_StunEnd);
-        public void TriggerDie() => animator.SetTrigger(HASH_DieTrigger);
+        public void TriggerRoll() => animator.SetTrigger(HashRollTrigger);
+        public void TriggerStun() => animator.SetTrigger(HashStunTrigger);
+        public void TriggerStunEnd() => animator.SetTrigger(HashStunEnd);
+        public void TriggerDie() => animator.SetTrigger(HashDieTrigger);
     }
 }

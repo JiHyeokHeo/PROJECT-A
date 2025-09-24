@@ -9,11 +9,11 @@ namespace TST
     {
         public bool IsActiveCursorVisible => Cursor.visible;
 
-        public static Action onDrag;
-        public static Action onDragEnd;
-        public static Action onMove;
-        public static Action onAttackMovePrime;
-        public static Action<KeyCode> onCast;
+        public static Action<Vector2> OnLeftDown;
+        public static Action<Vector2> OnLeftUp;
+        public static Action<Vector2> OnRightDown;
+        public static Action<KeyCode> OnCast;
+        public static Action OnAttackMovePrime;
 
         private void Start()
         {
@@ -38,29 +38,39 @@ namespace TST
         {
 
             if (Input.GetMouseButton(0))
-                onDrag?.Invoke();
+            {
+                var m = (Vector2)Input.mousePosition;
+                OnLeftDown?.Invoke(m);
+            }
 
             if (Input.GetMouseButtonUp(0))
-                onDragEnd?.Invoke();
+            {
+                var m = (Vector2)Input.mousePosition;
+                OnLeftUp?.Invoke(m);
+            }
 
             if (Input.GetMouseButtonDown(1))
-                onMove?.Invoke();
+            {
+                var m = (Vector2)Input.mousePosition;
+                OnRightDown?.Invoke(m);
+            }
+
 
             if (Input.GetKeyUp(KeyCode.Q))
-                onCast?.Invoke(KeyCode.Q);
+                OnCast?.Invoke(KeyCode.Q);
             
             if (Input.GetKeyUp(KeyCode.W))
-                onCast?.Invoke(KeyCode.W);
+                OnCast?.Invoke(KeyCode.W);
 
             if (Input.GetKeyUp(KeyCode.E))
-                onCast?.Invoke(KeyCode.E);
+                OnCast?.Invoke(KeyCode.E);
 
             if (Input.GetKeyUp(KeyCode.R))
-                onCast?.Invoke(KeyCode.R);
+                OnCast?.Invoke(KeyCode.R);
             if (Input.GetKeyDown(KeyCode.LeftShift))
-                onCast?.Invoke(KeyCode.LeftShift);
+                OnCast?.Invoke(KeyCode.LeftShift);
             if (Input.GetKeyDown(KeyCode.A))
-                onAttackMovePrime?.Invoke();
+                OnAttackMovePrime?.Invoke();
 
         }
 

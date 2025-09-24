@@ -9,7 +9,7 @@ public static class CombatUtility
     {
         if (target == null || target.Health == null) return;
 
-        float final = dmg.amount;
+        float final = dmg.Amount;
 
         /* 여기에 이제 Damage 관련된 식을 넣는다.
         
@@ -17,6 +17,6 @@ public static class CombatUtility
             ....
 
         */
-        target.Health.TakeDamage(final, dmg.source);
+        target.Health.TakeDamage(final, dmg.Source);
     }
 }

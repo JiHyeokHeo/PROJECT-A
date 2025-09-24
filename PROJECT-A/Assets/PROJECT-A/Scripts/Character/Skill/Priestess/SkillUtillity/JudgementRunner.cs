@@ -49,10 +49,10 @@ public class JudgementRunner : MonoBehaviour
         {
             var packet = new Damage
             {
-                amount = dmg + (caster.Stats?.Atk ?? 0f),
-                kind = DamageKind.Magical,
-                source = caster.Transform.gameObject,
-                hitPoint = (Vector2)target.Transform.position
+                Amount = dmg + (caster.Stats?.Atk ?? 0f),
+                Kind = DamageKind.Magical,
+                Source = caster.Transform.gameObject,
+                HitPoint = (Vector2)target.Transform.position
             };
             CombatUtility.ApplyDamage(target, packet);
         }
