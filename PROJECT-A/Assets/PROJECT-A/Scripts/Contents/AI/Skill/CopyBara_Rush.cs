@@ -44,13 +44,12 @@ namespace A
                 warnTr.localScale = new Vector3(lerpScale, 1f, 1f);
 
                 t += Time.deltaTime;
-                await UniTask.Yield(ct);
+                await UniTask.Yield(ct); // 업데이트 기반
             }
 
             SetWarningSign(false); // 워닝 사인 on off
             // CustomEvent -> 연동
             CustomEvent.Trigger(context.Owner.gameObject, "Switch", ECopyBaraAttackPattern.Rush);
-            //context.RigidBody2D.velocity = Vector2.zero; // 잔여 속도 제거
          
             while ((context.RigidBody2D.position - end).sqrMagnitude > 1.0f)
             {
@@ -63,9 +62,7 @@ namespace A
 
             // 후딜레이 설정
             await UniTask.Delay(2000);
-
             CustomEvent.Trigger(context.Owner.gameObject, "Switch", ECopyBaraAttackPattern.Run);
-
             return true;
         }
 

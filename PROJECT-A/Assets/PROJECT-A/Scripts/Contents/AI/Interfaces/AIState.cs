@@ -16,6 +16,5 @@ namespace A
         public abstract void Tick(float dt);
         public abstract void Exit();
         public abstract EAIStateId CheckTransition();
-            
     }
 }

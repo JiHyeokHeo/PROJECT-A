@@ -58,7 +58,7 @@ namespace A
         public override void Init(MonsterContext context, MonsterPatternSetSO data)
         {
             base.Init(context, data);
-            projectilePrefab = data.ProjectilePrefab;
+            projectilePrefab = data.AddedData.ProjectilePrefab;
             castingTime = 1.9f;
         }
     }

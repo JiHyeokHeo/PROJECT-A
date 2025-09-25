@@ -28,10 +28,24 @@ namespace A
     {
         MonsterContext monsterContext;
         float total; // 가중치
-        List<MonsterPattern> patterns = new List<MonsterPattern>();
+        List<MonsterPattern> skillCoolPatterns = new List<MonsterPattern>();
+        List<MonsterPattern> noSkillCoolPatterns = new List<MonsterPattern>();
         List<MonsterPattern> usablePatterns = new List<MonsterPattern>();
 
         Dictionary<int, CooldownGroup> cooldownGroups = new Dictionary<int, CooldownGroup>();
+
+        // 만약 어떠한 조건이 발생한다면 싹다 무시하고 패턴을 날린 후 시작
+        private void Update()
+        {
+            if (noSkillCoolPatterns.Count > 0)
+            {
+                for (int i = 0; i < noSkillCoolPatterns.Count; i++)
+                {
+                    
+                }
+            }
+        }
+
         public void SetUp(MonsterContext monsterContext)
         {
             this.monsterContext = monsterContext;
@@ -55,8 +69,11 @@ namespace A
                     pattern.SetCooldownGroup(new CooldownGroup(patternArr[i].CoolDown), 0);
                 }
 
-
-                patterns.Add(pattern);
+                // 스킬쿨 보유를 나눠두자
+                if (patternArr[i].hasCoolDown)
+                    skillCoolPatterns.Add(pattern);
+                else
+                    noSkillCoolPatterns.Add(pattern);
             }
             BuildFromConfig();
         }
@@ -77,12 +94,12 @@ namespace A
         public async UniTask ExecuteNext(CancellationToken ct)
         {
             usablePatterns.Clear();
-            for (int i = 0; i < patterns.Count; i++)
+            for (int i = 0; i < skillCoolPatterns.Count; i++)
             {
                 // 첫번째 쿨 확인
-                if (patterns[i].IsReadyToExecute(Time.time))
+                if (skillCoolPatterns[i].IsReadyToExecute(Time.time))
                 {
-                    usablePatterns.Add(patterns[i]);
+                    usablePatterns.Add(skillCoolPatterns[i]);
                 }
             }
 
@@ -95,7 +112,7 @@ namespace A
             {
                 pick.ResetCooldown(Time.time); // 스킬 쿨초
 
-                foreach (var p in patterns)
+                foreach (var p in skillCoolPatterns)
                 {
                     if (p == pick)
                         continue;
@@ -104,6 +121,16 @@ namespace A
                         p.ResetConsecutiveChain(); // 봉인 해제
                 }
             }
+        }
+
+        // 전환이 이뤄지는 패턴이다
+        // 기존에 하던 패턴은 다 끊어야한다.
+        public void ExecuteTransition(CancellationToken ct)
+        {
+            // 취소 요청을 보낸다. 패턴을 다 중지
+            monsterContext.ResetToken();
+
+
         }
 
         MonsterPattern Pick()

@@ -8,20 +8,37 @@ public class PatternFactory
     {
         MonsterPattern pattern = null;
 
-        switch (definition.monsterID)
+        if (definition.hasCoolDown)
         {
-            case (int)EMonsterID.CopyBara:
-                CreatePattern(definition.PatternID, out pattern);
-                break;
+            switch (definition.monsterID)
+            {
+                case (int)EMonsterID.CopyBara:
+                    CreatePatternWithCoolDown(definition.PatternID, out pattern);
+                    break;
 
-            default:
-                throw new ArgumentOutOfRangeException(nameof(definition.monsterID), definition.monsterID, null);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(definition.monsterID), definition.monsterID, null);
+            }
+        }
+        else
+        {
+            switch (definition.monsterID)
+            {
+                case (int)EMonsterID.CopyBara:
+                    CreatePatternWithNoCoolDown(definition.PatternID, out pattern);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(definition.monsterID), definition.monsterID, null);
+            }
         }
 
-        return pattern;
+
+
+            return pattern;
     }
 
-    static MonsterPattern CreatePattern(EPatternID patternId, out MonsterPattern pattern)
+    static MonsterPattern CreatePatternWithCoolDown(EPatternID patternId, out MonsterPattern pattern)
     {
         switch (patternId)
         {
@@ -36,6 +53,20 @@ public class PatternFactory
                 break;
             default:
             throw new ArgumentOutOfRangeException(nameof(patternId), patternId, null);
+        }
+
+        return pattern;
+    }
+
+    static MonsterPattern CreatePatternWithNoCoolDown(EPatternID patternId, out MonsterPattern pattern)
+    {
+        switch (patternId)
+        {
+            case EPatternID.Melt:
+                pattern = new CopyBara_Melt();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(patternId), patternId, null);
         }
 
         return pattern;

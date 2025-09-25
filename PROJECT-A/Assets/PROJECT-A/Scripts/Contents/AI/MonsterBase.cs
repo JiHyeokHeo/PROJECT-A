@@ -114,8 +114,6 @@ namespace A
                 facingSing = sign;
                 animationDriver.Flip();
             }
-
-            //ResourceManager.Singleton.SpawnAsync("t", nextPosition, Quaternion.identity);
         }
 
         private void Dead()

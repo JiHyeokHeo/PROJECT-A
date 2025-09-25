@@ -1,11 +1,14 @@
-using System;
+ï»¿using System;
+using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public enum EPatternID
 {
     Rush,
     Smash,
     ColdBeam,
+    Melt,
     None,
 }
 
@@ -16,18 +19,70 @@ public enum EMonsterID
 
 namespace A
 {
-    // ÆĞÅÏ¿¡ °ü·ÃµÈ ¿¡¼Â
+    // íŒ¨í„´ì— ê´€ë ¨ëœ ì—ì…‹
     [CreateAssetMenu(menuName = "PROJECT.A/Monster/PatternSetSO", fileName = "PatternSetSO")]
     public class MonsterPatternSetSO : ScriptableObject
     {
-        [Header("ÆĞÅÏ ±âº» Á¤º¸")]
+        [Header("íŒ¨í„´ ê¸°ë³¸ ì •ë³´")]
         public int monsterID;
-        public EPatternID PatternID; // ÃßÈÄ ¹¹ ÀÎÆ®·Î ¹Ù²ß½Ã´Ù
+        public EPatternID PatternID; // ì¶”í›„ ë­ ì¸íŠ¸ë¡œ ë°”ê¿‰ì‹œë‹¤
+        public bool hasCoolDown;
         public float CoolDown;
-        [Tooltip("0 = µ¶¸³, 1 ÀÌ»ó = °øÀ¯ ±×·ì ID")]
+
+        [Tooltip("0 = ë…ë¦½, 1 ì´ìƒ = ê³µìœ  ê·¸ë£¹ ID")]
         public int CooldownGroupId; 
         public float AttackRange;
-        [Range(0, 1)] public float Weight = 0.3f; // °¡Áßµµ 
+        [Range(0, 1)] public float Weight = 0.3f; // ê°€ì¤‘ë„ 
+
+        // ì˜µì…˜
+        [SerializeReference]
+        public SpecificMonsterPatternData AddedData;
+    }
+
+    [System.Serializable]
+    public class SpecificMonsterPatternData
+    {
+        // ë°œë™ ì²´ë ¥
+        [Range(0, 1)] public float executeHpRatio;
         public GameObject ProjectilePrefab;
+    }
+
+    [CustomEditor(typeof(MonsterPatternSetSO))]
+    public class MonsterPatternSetSOEditor : Editor
+    {
+        private MonsterPatternSetSO patternTarget;
+
+        private void OnEnable()
+        {
+            patternTarget = (MonsterPatternSetSO)target;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+
+            EditorGUILayout.Space();
+
+            if (patternTarget.AddedData == null)
+            {
+                if (GUILayout.Button("Specific Data ì¶”ê°€"))
+                {
+                    Undo.RecordObject(patternTarget, "Add Specific Data");
+                    patternTarget.AddedData = new SpecificMonsterPatternData();
+                    EditorUtility.SetDirty(patternTarget);
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("Specific Data ì œê±°"))
+                {
+                    Undo.RecordObject(patternTarget, "Remove Specific Data");
+                    patternTarget.AddedData = null;
+                    EditorUtility.SetDirty(patternTarget);
+                }
+            }
+
+            serializedObject.ApplyModifiedProperties();
+        }
     }
 }

@@ -56,16 +56,7 @@ namespace A
             SetWarningSign(false); // 워닝 사인 on off
             // CustomEvent -> 연동
             CustomEvent.Trigger(context.Owner.gameObject, "Switch", ECopyBaraAttackPattern.RushDone);
-            //context.RigidBody2D.velocity = Vector2.zero; // 잔여 속도 제거
-
-            //while ((context.RigidBody2D.position - end).sqrMagnitude > 1.0f)
-            //{
-            //    ct.ThrowIfCancellationRequested();
-
-            //    context.Owner.Move(dir, context.Config.MoveSpeed);
-            //    await UniTask.WaitForFixedUpdate(ct);
-            //}
-
+          
             // 후딜레이 설정
             await UniTask.Delay(2000);
 
