@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace A
         Inner,
     }
 
+    [Serializable]
     public abstract class MonsterPattern
     {
         // TODO : 인터페이스를 통한 CoolDown Casting 더 분리 가능, 추후 필요하다면 분리

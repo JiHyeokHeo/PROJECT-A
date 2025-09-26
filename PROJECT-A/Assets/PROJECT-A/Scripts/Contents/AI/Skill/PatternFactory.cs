@@ -1,74 +1,33 @@
 using A;
 using System;
+using Unity.VisualScripting;
 
 public class PatternFactory
 {
-    // TODO : È¤½Ã ÄÁÅÙÃ÷°¡ ´Ã¾î³­´Ù¸é Dictionary Mapping °í·Á
     public static MonsterPattern Create(MonsterPatternSetSO definition)
     {
         MonsterPattern pattern = null;
 
-        if (definition.hasCoolDown)
-        {
-            switch (definition.monsterID)
-            {
-                case (int)EMonsterID.CopyBara:
-                    CreatePatternWithCoolDown(definition.PatternID, out pattern);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(definition.monsterID), definition.monsterID, null);
-            }
-        }
-        else
-        {
-            switch (definition.monsterID)
-            {
-                case (int)EMonsterID.CopyBara:
-                    CreatePatternWithNoCoolDown(definition.PatternID, out pattern);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(definition.monsterID), definition.monsterID, null);
-            }
-        }
-
-
-
-            return pattern;
-    }
-
-    static MonsterPattern CreatePatternWithCoolDown(EPatternID patternId, out MonsterPattern pattern)
-    {
-        switch (patternId)
-        {
-            case EPatternID.Rush:
-                pattern = new CopyBara_Rush();
-            break;
-            case EPatternID.Smash:
-                pattern = new CopyBara_Smash();
-                break;
-            case EPatternID.ColdBeam:
-                pattern = new CopyBara_ColdBeam();
-                break;
-            default:
-            throw new ArgumentOutOfRangeException(nameof(patternId), patternId, null);
-        }
+        pattern = CreatePatternWithCoolDown(definition.PatternID);
 
         return pattern;
     }
 
-    static MonsterPattern CreatePatternWithNoCoolDown(EPatternID patternId, out MonsterPattern pattern)
+    static MonsterPattern CreatePatternWithCoolDown(string patternId, string namespaceFullpath = "A")
     {
-        switch (patternId)
-        {
-            case EPatternID.Melt:
-                pattern = new CopyBara_Melt();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(patternId), patternId, null);
-        }
+        if (string.IsNullOrWhiteSpace(patternId))
+            return null;
 
-        return pattern;
+        Type type = Type.GetType($"{namespaceFullpath}.{patternId}");
+
+        if (type != null)
+        {
+            object instance = Activator.CreateInstance(type);
+
+            if (instance != null)
+                return instance as MonsterPattern;
+        }
+  
+        return null;
     }
 }

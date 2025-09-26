@@ -29,21 +29,18 @@ namespace A
         MonsterContext monsterContext;
         float total; // 가중치
         List<MonsterPattern> skillCoolPatterns = new List<MonsterPattern>();
-        List<MonsterPattern> noSkillCoolPatterns = new List<MonsterPattern>();
+        List<MonsterPattern> transitionPatterns = new List<MonsterPattern>();
+        Queue<MonsterPattern> queuePatterns = new Queue<MonsterPattern>(); // 쌓아둘 패턴
         List<MonsterPattern> usablePatterns = new List<MonsterPattern>();
 
+        MonsterPattern currentPattern;
         Dictionary<int, CooldownGroup> cooldownGroups = new Dictionary<int, CooldownGroup>();
 
         // 만약 어떠한 조건이 발생한다면 싹다 무시하고 패턴을 날린 후 시작
         private void Update()
         {
-            if (noSkillCoolPatterns.Count > 0)
-            {
-                for (int i = 0; i < noSkillCoolPatterns.Count; i++)
-                {
-                    
-                }
-            }
+            if (monsterContext == null)
+                return;
         }
 
         public void SetUp(MonsterContext monsterContext)
@@ -73,7 +70,7 @@ namespace A
                 if (patternArr[i].hasCoolDown)
                     skillCoolPatterns.Add(pattern);
                 else
-                    noSkillCoolPatterns.Add(pattern);
+                    transitionPatterns.Add(pattern);
             }
             BuildFromConfig();
         }

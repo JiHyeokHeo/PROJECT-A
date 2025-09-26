@@ -25,7 +25,8 @@ namespace A
     {
         [Header("패턴 기본 정보")]
         public int monsterID;
-        public EPatternID PatternID; // 추후 뭐 인트로 바꿉시다
+        [SerializeReference]
+        public string PatternID; // 추후 뭐 인트로 바꿉시다
         public bool hasCoolDown;
         public float CoolDown;
 
