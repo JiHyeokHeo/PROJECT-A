@@ -10,6 +10,10 @@ namespace A
         Smash,
         SmashReady,
         SmashDone,
+        Melt,
+        MeltIdle,
+        MeltDone,
+        MeltFlinch,
         MeleeAttack,
     }
 

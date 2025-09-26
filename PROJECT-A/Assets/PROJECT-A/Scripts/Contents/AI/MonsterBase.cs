@@ -46,16 +46,12 @@ namespace A
         public float CurrentHP
         {
             get { return hp; }
-            set
-            {
-                if (hp != value)
-                    hp = value;
-            }
+            set { hp = value; }
         }
 
         public bool IsDead { get; private set; }
 
-        public float hp;
+        private float hp;
 
         float facingSing = 1; // ���� 1 ������ -1
         #endregion
@@ -74,6 +70,7 @@ namespace A
 
         private void Awake()
         {
+            hp = 100;
             aI_Controller = GetComponent<AI_Controller>();
             monsterContext = new MonsterContext();
             monsterContext.Owner = this;
@@ -91,6 +88,11 @@ namespace A
         private void Start()
         {
       
+        }
+
+        private void Update()
+        {
+            patternScheduler.UpdateTick();
         }
 
         void FixedUpdate()
@@ -127,7 +129,6 @@ namespace A
                 return;
 
             CurrentHP -= damage;
-
             GameManager.Instance.NotifyMonsterHpChanged(this, CurrentHP, monsterConfig.MaxHp);
         }
     }

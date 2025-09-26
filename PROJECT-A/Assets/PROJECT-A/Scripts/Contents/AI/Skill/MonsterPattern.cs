@@ -19,6 +19,7 @@ namespace A
         protected MonsterContext context;
         protected MonsterPatternSetSO patternSO;
         protected float castingTime;
+        protected float usingTime;
         protected float attackRange;
         public float weight;
 
@@ -29,6 +30,11 @@ namespace A
         private bool isAvailableToLock = false;
         private bool isLocked = false;
         private int maxConsecutiveUses = 2;
+
+        public virtual bool CheckExecuteCondition()
+        {
+            return false;
+        }
 
         public void SetCooldownGroup(CooldownGroup group, int groupId = 0) // 0번은 그룹 없는 버전
         {

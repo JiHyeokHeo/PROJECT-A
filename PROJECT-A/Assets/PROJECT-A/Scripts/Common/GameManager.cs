@@ -93,6 +93,12 @@ namespace TST
         public void NotifyMonsterHpChanged(MonsterBase monster, float current, float maxHp)
         {
             OnMonsterHpChanged?.Invoke(monster, current, maxHp);
+        
+        }
+        [Button()]
+        public void TakeDamage(MonsterBase monster, float dmg)
+        {
+            monster.ApplyDamage(dmg);
         }
     }
 }

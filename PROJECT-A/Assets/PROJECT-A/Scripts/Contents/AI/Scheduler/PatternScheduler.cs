@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using TST;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -29,18 +30,43 @@ namespace A
         MonsterContext monsterContext;
         float total; // 가중치
         List<MonsterPattern> skillCoolPatterns = new List<MonsterPattern>();
-        List<MonsterPattern> transitionPatterns = new List<MonsterPattern>();
-        Queue<MonsterPattern> queuePatterns = new Queue<MonsterPattern>(); // 쌓아둘 패턴
+        List<MonsterPattern> transitionPatterns = new List<MonsterPattern>(); // 특정 조건에 의해 전환되는 패턴
         List<MonsterPattern> usablePatterns = new List<MonsterPattern>();
 
         MonsterPattern currentPattern;
         Dictionary<int, CooldownGroup> cooldownGroups = new Dictionary<int, CooldownGroup>();
 
+        private float tickTime = 0.1f;
+        private float lastTick = 0f;
+
         // 만약 어떠한 조건이 발생한다면 싹다 무시하고 패턴을 날린 후 시작
-        private void Update()
+        public void UpdateTick()
         {
-            if (monsterContext == null)
+            if (Time.time < lastTick + tickTime)
                 return;
+
+            lastTick += tickTime;
+
+            if (monsterContext == null || transitionPatterns.Count <= 0)
+                return;
+
+            for (int i = 0; i < transitionPatterns.Count; i++)
+            {
+                if (currentPattern != null && transitionPatterns[i].Equals(currentPattern))
+                    return;
+
+                if (transitionPatterns[i].CheckExecuteCondition() == false)
+                    return;
+
+                currentPattern = transitionPatterns[i];
+                RunPatternSafe(transitionPatterns[i], monsterContext.CancellationToken.Token).Forget();
+            }
+        }
+
+        async UniTaskVoid RunPatternSafe(MonsterPattern pat, CancellationToken ct)
+        {
+            await pat.Execute(ct);
+            currentPattern = null;
         }
 
         public void SetUp(MonsterContext monsterContext)
@@ -72,6 +98,7 @@ namespace A
                 else
                     transitionPatterns.Add(pattern);
             }
+
             BuildFromConfig();
         }
 
@@ -90,6 +117,9 @@ namespace A
 
         public async UniTask ExecuteNext(CancellationToken ct)
         {
+            if (currentPattern != null)
+                return;
+
             usablePatterns.Clear();
             for (int i = 0; i < skillCoolPatterns.Count; i++)
             {
@@ -103,10 +133,12 @@ namespace A
             var pick = Pick();
             if (pick == null)
                 return;
+            currentPattern = pick;
 
             // 성공적으로 리턴을 했을 때에만 스킬 쿨 초기화
             if (await pick.Execute(ct))
             {
+                currentPattern = null;
                 pick.ResetCooldown(Time.time); // 스킬 쿨초
 
                 foreach (var p in skillCoolPatterns)
@@ -118,16 +150,6 @@ namespace A
                         p.ResetConsecutiveChain(); // 봉인 해제
                 }
             }
-        }
-
-        // 전환이 이뤄지는 패턴이다
-        // 기존에 하던 패턴은 다 끊어야한다.
-        public void ExecuteTransition(CancellationToken ct)
-        {
-            // 취소 요청을 보낸다. 패턴을 다 중지
-            monsterContext.ResetToken();
-
-
         }
 
         MonsterPattern Pick()
